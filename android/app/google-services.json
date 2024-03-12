@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "929345678957",
+    "project_id": "konami-bet",
+    "storage_bucket": "konami-bet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:929345678957:android:8a023502843dd3a135d964",
+        "android_client_info": {
+          "package_name": "com.konami.bet.konami_bet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "929345678957-iv0ad9vbb6ppvhooq18fijm1aljm4qqd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.konami.bet.konami_bet",
+            "certificate_hash": "18762d17590d4f15158209efa49692d1f938a062"
+          }
+        },
+        {
+          "client_id": "929345678957-dt48169omje70rjtek13boeuanmo60ol.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkZVAGLDyQ9e-HdKDj-cMJzl8pI1O-zFU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "929345678957-dt48169omje70rjtek13boeuanmo60ol.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
