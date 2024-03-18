@@ -9,7 +9,9 @@ import 'package:konami_bet/pages/admin/home.dart';
 import 'package:konami_bet/pages/auth/phone.dart';
 import 'package:konami_bet/pages/auth/registration.dart';
 import 'package:konami_bet/pages/auth/verify.dart';
+import 'package:konami_bet/pages/chargement_login.dart';
 import 'package:konami_bet/pages/home.dart';
+import 'package:konami_bet/providers/equipe_provider.dart';
 import 'package:konami_bet/services/soccer_services.dart';
 import 'firebase_options.dart';
 import 'providers/providers.dart';
@@ -27,6 +29,7 @@ Future<void> main() async {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => ServiceProvider()),
+          ChangeNotifierProvider(create: (_) => EquipeProvider()),
           // ChangeNotifierProvider(create: (_) => MyProvider2()),
         ],
         child: MyApp(),
@@ -52,7 +55,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late   FirebaseAuth _auth = FirebaseAuth.instance;
-  late   FootballDataApi footballDataApi =FootballDataApi();
 
   late bool _isLogged = false;
   late bool isAndroid=false;
@@ -69,7 +71,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _checkCurrentUser();
+  //  _checkCurrentUser();
     /*
     Timer.periodic(Duration(seconds: 60), (timer) {
       footballDataApi.apiDataToDataBase();
@@ -91,7 +93,7 @@ class _MyAppState extends State<MyApp> {
 
         primarySwatch: Colors.green,
       ),
-      initialRoute: _isLogged?'/' : 'phone',
+      initialRoute:  'chargement',
       routes: {
         '/': (context) =>MyHomePage(title: "konami"), //kIsWeb?AdminHomePage(): MyHomePage(title: "konami"),
         //'verify': (context) =>  MyHomePage(title: "konami"),
@@ -99,6 +101,7 @@ class _MyAppState extends State<MyApp> {
         'verify': (context) => MyVerify(),
         'homeAdm': (context) => AdminHomePage(),
         'login': (context) => RegistrationPage(),
+        'chargement': (context) => SplahsChargement(),
       },
 
     );

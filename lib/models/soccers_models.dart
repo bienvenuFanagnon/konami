@@ -3,35 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 part 'soccers_models.g.dart'; // Generated file name based on the class name
 /* flutter pub run build_runner build */
 
-@JsonSerializable()
-class Matches {
-
-  late int? id;
-  late String? id_db="";
-  late String? homeTeamName="";
-  late String? awayTeamName="";
-  late int? homeTeamId=0;
-  late int? awayTeamId=0;
-  late String? homeTeamLogo="";
-  late String? awayTeamLogo="";
-  late int? awayTeamScore;
-  late int? homeTeamScore;
-  late String? dateDuMatch="";
-  late String? heureDuMatch="";
-  late String? status="";
-  late String? minute="";
-  late String? competition="";
 
 
+class Match {
+  Equipe equipe1;
+  Equipe equipe2;
+  int scoreEquipe1;
+  int scoreEquipe2;
+  DateTime date;
 
-
-  Matches();
-
-  // Add a factory constructor that creates a new instance from a JSON map
-  factory Matches.fromJson(Map<String, dynamic> json) => _$MatchesFromJson(json);
-
-  // Add a method that converts this instance to a JSON map
-  Map<String, dynamic> toJson() => _$MatchesToJson(this);
+  Match(this.equipe1, this.equipe2, this.scoreEquipe1, this.scoreEquipe2,this.date);
 }
 @JsonSerializable()
 class Equipe {
@@ -75,31 +56,13 @@ class Utilisateur {
 
 @JsonSerializable()
 class Pari {
-    late String? id_db="";
-  late String? homeTeamLogo="";
-  late String? awayTeamLogo="";
-   late String? homeTeamName="";
-  late String? awayTeamName="";
-    late String? dateDuMatch="";
-  late String? heureDuMatch="";
-    late String? competition="";
+    late String? id="";
+    late String? user_id="";
+    late int? createdAt;
+   late int? updatedAt;
+    late double? montant=0;
 
-  late String? id_home_user="";
-  late String? id_user="";
-  late String? id_away_user="";
-  late int? home_score=0;
-  late int? away_score=0;
-  late String? typePari="";
-  late String? id_match="";
-  late String? user_home_pari=null;
-  late String? user_away_pari=null;
-  late double? prix=0;
-  late String? winner =null;
-  late String? status ="";
-
-
-
-
+    late List<String>? teams_id=[];
 
   Pari();
 
@@ -112,17 +75,21 @@ class Pari {
 
 
 @JsonSerializable()
-class VerificationDuLancement {
-  late String? id_db="";
-  late String? date="${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";
-  late bool? lancer=false;
+class MatchPari {
+  late String? id="";
+  late String? status="";
+  late int? createdAt;
+  late int? updatedAt;
+  late double? montant=0;
+  late List<String>? pari_id=[];
 
 
-  VerificationDuLancement();
 
-  factory VerificationDuLancement.fromJson(Map<String, dynamic> json) => _$VerificationDuLancementFromJson(json);
+  MatchPari();
 
-  Map<String, dynamic> toJson() => _$VerificationDuLancementToJson(this);
+  factory MatchPari.fromJson(Map<String, dynamic> json) => _$MatchPariFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MatchPariToJson(this);
 }
 @JsonSerializable()
 class MiseAJourMatches {

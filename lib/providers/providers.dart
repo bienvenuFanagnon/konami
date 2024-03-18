@@ -3,23 +3,46 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:konami_bet/models/soccers_models.dart';
 import 'package:konami_bet/services/database.dart';
 import 'package:konami_bet/services/soccer_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
 
 
 class ServiceProvider extends ChangeNotifier {
-late FootballDataApi footballDataApi = FootballDataApi();
 late VerificationDuLancementService verificationDuLancementService = VerificationDuLancementService();
 late MiseAJourMatchesService miseAJourMatchesService = MiseAJourMatchesService();
 late MatchService matchService = MatchService();
 late PariService pariService = PariService();
 late Utilisateur loginUser=Utilisateur();
-late List<Matches> listMatchApi=[];
 late Utilisateur userVerify =Utilisateur();
 late UtilisateurService utilisateurService = UtilisateurService();
+late String? token = '';
+Future<void> storeIsFirst(bool value) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('isFirst', value);
+}
 
+Future<bool?> getIsFirst() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  // token = prefs.getString('token');
+  // print("get token : ${token}");
+  //notifyListeners();
+  return prefs.getBool('isFirst');
+}
 
+Future<void> storeToken(String value) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', value);
+}
+
+Future<String?> getToken() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  token = prefs.getString('token');
+  // print("get token : ${token}");
+  //notifyListeners();
+  return prefs.getString('token');
+}
 getLoginUser(){
 
   notifyListeners();
@@ -49,7 +72,7 @@ getLoginUser(){
 
   notifyListeners();
   }
-  getUserById(String id,String phoneNumber,BuildContext context) async {
+  getUserById(String id,BuildContext context) async {
   List<Utilisateur> listu=[];
 
   listu=await utilisateurService.getUserById(id);
@@ -57,16 +80,16 @@ getLoginUser(){
     this.loginUser=Utilisateur();
      this.loginUser=listu[0];
     print("user data providers");
+    print("user data : ${this.loginUser.toJson()}");
     print( this.loginUser.id_db);
 
     Navigator.pushNamed(context, '/');
-      notifyListeners();
+     // notifyListeners();
   }else{
-    loginUser.id_db=id;
-    loginUser.phoneNumber=phoneNumber;
-    Navigator.pushNamed(context, 'login');
+
+    Navigator.pushNamed(context, 'phone');
   }
-  notifyListeners();
+//  notifyListeners();
   }
 
    creatAllMatchByApi() async {

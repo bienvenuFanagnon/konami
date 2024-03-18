@@ -126,7 +126,8 @@ class _MyVerifyState extends State<MyVerify> {
                         print("id login user ");
                         print(authResult.user!.uid!);
                        // authResult.user. get user
-                        serviceProvider.getUserById(authResult.user!.uid!,authResult.user!.phoneNumber!, context);
+                      await  serviceProvider.getUserById(authResult.user!.uid!, context);
+                        serviceProvider.storeToken(authResult.user!.uid!);
                         code="";
 
 

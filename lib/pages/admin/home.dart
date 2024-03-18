@@ -13,7 +13,6 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
-  late FootballDataApi footballDataApi=FootballDataApi();
   late ServiceProvider serviceProvider =
   Provider.of<ServiceProvider>(context, listen: false);
 

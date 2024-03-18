@@ -10,24 +10,7 @@ class MatchService {
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 // fonctions creer, recuperer, effacer et mise a jurs des donnees firebase
-  Future<String> create(Matches data) async {
-    String id = firestore
-        .collection('Matches')
-        .doc()
-        .id;
-    data.id_db = id;
-    try{
-      final DocumentReference<Map<String, dynamic>> docRef = FirebaseFirestore.instance.collection('Matches').doc(id);
-      docRef.set(data.toJson());
 
-
-    //  await firestore.collection('Matches').doc(id).set(data.toJson());
-      print("///////////-- SAVE soccer data  --///////////////");
-    } on FirebaseException catch(error){
-
-    }
-    return id;
-  }
 
   test(){
     // Créez une référence de document
@@ -96,52 +79,6 @@ class MatchService {
   }
 
 
-  Future<List<Matches>> getAllMatches() async {
-    late List<Matches> list= [];
-
-
-    CollectionReference collectionRef =
-    FirebaseFirestore.instance.collection('Matches');
-    // Get docs from collection reference
-    QuerySnapshot querySnapshot = await collectionRef.get()
-        .then((value){
-
-      return value;
-    }).catchError((onError){
-
-    });
-
-    // Get data from docs and convert map to List
-    list = querySnapshot.docs.map((doc) =>
-        Matches.fromJson(doc.data() as Map<String, dynamic>)).toList();
-
-    return list;
-
-  }
-  Future<List<Matches>> getMatchById(String id) async {
-    late List<Matches> list= [];
-
-
-    CollectionReference collectionRef =
-    FirebaseFirestore.instance.collection('Defis');
-    // Get docs from collection reference
-    QuerySnapshot querySnapshot = await collectionRef.where("id",isEqualTo: id!).get()
-        .then((value){
-      print("defis");
-      print(value);
-      return value;
-    }).catchError((onError){
-
-    });
-
-    // Get data from docs and convert map to List
-    list = querySnapshot.docs.map((doc) =>
-        Matches.fromJson(doc.data() as Map<String, dynamic>)).toList();
-
-
-    return list;
-
-  }
 
   void fromJson(Object? data) {}
 
@@ -153,22 +90,6 @@ class VerificationDuLancementService {
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 // fonctions creer, recuperer, effacer et mise a jurs des donnees firebase
-  Future<String> create(VerificationDuLancement data) async {
-    String id = firestore
-        .collection('VerificationDuLancement')
-        .doc()
-        .id;
-    data.id_db = id;
-    try{
-
-
-      await firestore.collection('VerificationDuLancement').doc(id).set(data.toJson());
-      print("///////////-- SAVE verifier --///////////////");
-    } on FirebaseException catch(error){
-
-    }
-    return id;
-  }
 
   void update(String dataId, Map<String, dynamic> dataMap) async {
     try {
@@ -196,28 +117,6 @@ class VerificationDuLancementService {
   }
 
 
-  Future<List<VerificationDuLancement>> getVerificationDuLancement() async {
-    late List<VerificationDuLancement> list= [];
-
-
-    CollectionReference collectionRef =
-    FirebaseFirestore.instance.collection('VerificationDuLancement');
-    // Get docs from collection reference
-    QuerySnapshot querySnapshot = await collectionRef.get()
-        .then((value){
-
-      return value;
-    }).catchError((onError){
-
-    });
-
-    // Get data from docs and convert map to List
-    list = querySnapshot.docs.map((doc) =>
-        VerificationDuLancement.fromJson(doc.data() as Map<String, dynamic>)).toList();
-
-    return list;
-
-  }
 
 
 
@@ -229,22 +128,7 @@ class MiseAJourMatchesService {
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 // fonctions creer, recuperer, effacer et mise a jurs des donnees firebase
-  Future<String> create(Matches data) async {
-    String id = firestore
-        .collection('MiseAJourMatches')
-        .doc()
-        .id;
-    data.id_db = id;
-    try{
 
-
-      await firestore.collection('MiseAJourMatches').doc(id).set(data.toJson());
-      print("///////////-- SAVE DATA --///////////////");
-    } on FirebaseException catch(error){
-
-    }
-    return id;
-  }
 
   void update(String dataId, Map<String, dynamic> dataMap) async {
     try {
@@ -302,7 +186,7 @@ class PariService {
         .collection('PariEnCours')
         .doc()
         .id;
-    data.id_db = id;
+    data.id = id;
     try{
       final DocumentReference<Map<String, dynamic>> docRef = FirebaseFirestore.instance.collection('PariEnCours').doc(id);
       docRef.set(data.toJson());
@@ -387,30 +271,7 @@ class PariService {
     return list;
 
   }
-  Future<List<Matches>> getPariById(String id) async {
-    late List<Matches> list= [];
 
-
-    CollectionReference collectionRef =
-    FirebaseFirestore.instance.collection('Defis');
-    // Get docs from collection reference
-    QuerySnapshot querySnapshot = await collectionRef.where("id",isEqualTo: id!).get()
-        .then((value){
-      print("defis");
-      print(value);
-      return value;
-    }).catchError((onError){
-
-    });
-
-    // Get data from docs and convert map to List
-    list = querySnapshot.docs.map((doc) =>
-        Matches.fromJson(doc.data() as Map<String, dynamic>)).toList();
-
-
-    return list;
-
-  }
 
 }
 
