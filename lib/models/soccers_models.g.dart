@@ -38,6 +38,7 @@ Map<String, dynamic> _$UtilisateurToJson(Utilisateur instance) =>
 Pari _$PariFromJson(Map<String, dynamic> json) => Pari()
   ..id = json['id'] as String?
   ..user_id = json['user_id'] as String?
+  ..status = json['status'] as String?
   ..createdAt = json['createdAt'] as int?
   ..updatedAt = json['updatedAt'] as int?
   ..montant = (json['montant'] as num?)?.toDouble()
@@ -47,6 +48,7 @@ Pari _$PariFromJson(Map<String, dynamic> json) => Pari()
 Map<String, dynamic> _$PariToJson(Pari instance) => <String, dynamic>{
       'id': instance.id,
       'user_id': instance.user_id,
+      'status': instance.status,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
       'montant': instance.montant,

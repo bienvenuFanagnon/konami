@@ -58,11 +58,16 @@ class Utilisateur {
 class Pari {
     late String? id="";
     late String? user_id="";
+    late String? status="";
     late int? createdAt;
    late int? updatedAt;
     late double? montant=0;
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    late Utilisateur? user=Utilisateur();
 
     late List<String>? teams_id=[];
+    @JsonKey(includeFromJson: false, includeToJson: false)
+    late List<Equipe>? teams=[];
 
   Pari();
 
@@ -109,6 +114,9 @@ IN_PLAY,PAUSED,FINISHED,SUSPENDED,CANCELLED,TIMED
 }
 enum TypePari{
   VICTOIRE,TOTAL_TEAM,TEAM_A,TEAM_B
+}
+enum PariStatus{
+  DISPONIBLE,ENCOURS,PARIER
 }
 enum ChoixPari{
   V1,X,V2

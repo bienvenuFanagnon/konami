@@ -10,7 +10,7 @@ import 'package:konami_bet/services/soccer_services.dart';
 class EquipeProvider extends ChangeNotifier {
   List<Equipe> teams =[];
   List<Equipe> teams_selected =[];
-
+  List<Pari> listPari = [];
   int genererScoreAleatoire() {
     Random random = Random();
     return random.nextInt(10);
@@ -137,4 +137,94 @@ class EquipeProvider extends ChangeNotifier {
     }
 
   }
+
+  Stream<List<Pari>> getListPari() async* {
+    var pariStream = FirebaseFirestore.instance.collection('PariEnCours')
+       // .where("entreprise_id",isEqualTo:'${entrepriseId}')
+      //  .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
+       // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+        .orderBy('createdAt', descending: true)
+
+        .snapshots();
+    List<Pari> paries = [];
+    listPari =[];
+    //  UserData userData=UserData();
+    await for (var snapshot in pariStream) {
+      paries = [];
+
+      for (var post in snapshot.docs) {
+        //  print("post : ${jsonDecode(post.toString())}");
+        Pari p=Pari.fromJson(post.data());
+        p.teams=[];
+        CollectionReference equipeCollect = await FirebaseFirestore.instance.collection('Equipes');
+
+        CollectionReference friendCollect = await FirebaseFirestore.instance.collection('Utilisateur');
+        QuerySnapshot querySnapshotUser = await friendCollect.where("id_db",isEqualTo:'${p.user_id}').get();
+        // Afficher la liste
+
+
+        List<Utilisateur> userList = querySnapshotUser.docs.map((doc) =>
+            Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+        p.user=userList.first;
+        for(String eqid in p.teams_id!){
+          QuerySnapshot querySnapshotPari = await equipeCollect.where("id",isEqualTo:'${eqid}').get();
+          // Afficher la liste
+
+
+          List<Equipe> teamList = querySnapshotPari.docs.map((doc) =>
+              Equipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
+          p.teams!.add(teamList.first);
+
+        }
+        paries.add(p);
+        listPari=paries;
+
+
+      }
+      yield listPari;
+    }
+  }
+  Future<bool> updatePari(Pari pari,BuildContext context) async {
+    try{
+
+
+
+      await FirebaseFirestore.instance
+          .collection('PariEnCours')
+          .doc(pari.id)
+          .update(pari.toJson());
+
+      return true;
+    }catch(e){
+      print("erreur update post : ${e}");
+      return false;
+    }
+  }
+  Future<Pari> getOnlyPari(String id) async {
+    //await getAppData();
+    late List<Pari> list= [];
+
+    CollectionReference collectionRef =
+    FirebaseFirestore.instance.collection('PariEnCours');
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await collectionRef.where("id",isEqualTo: id!).get()
+        .then((value){
+
+      print(value);
+      return value;
+    }).catchError((onError){
+
+    });
+
+    // Get data from docs and convert map to List
+    list = querySnapshot.docs.map((doc) =>
+        Pari.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+
+
+    return list.first;
+
+  }
 }
+
