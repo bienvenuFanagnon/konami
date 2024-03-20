@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../models/soccers_models.dart';
 import '../../providers/equipe_provider.dart';
 import '../../providers/providers.dart';
+import '../match.dart';
 
 class DetailsPari extends StatefulWidget {
   final Pari pari;
@@ -383,6 +384,7 @@ class _DetailsPariState extends State<DetailsPari> {
                                                                           setState(() {
                                                                             // teams.add(team);
                                                                             if (  monPari.teams!.length>2) {
+                                                                              Navigator.pop(context);
                                                                               SnackBar snackBar = SnackBar(
                                                                                 content: Text(
                                                                                   'le nombre maximal est atteint 3',
@@ -453,39 +455,80 @@ class _DetailsPariState extends State<DetailsPari> {
 
               SizedBox(height: 10,),
               TextButton(onPressed: () async {
-                /*
 
-                  if (equipeProvider.teams_selected.length==3) {
+
+                  if (monPari.teams!.length==3) {
                     setState(() {
                       onTap=true;
                     });
-                    String id = FirebaseFirestore.instance
-                        .collection('PariEnCours')
-                        .doc()
-                        .id;
-                    Pari pari=Pari();
-                    pari.id=id;
+                    try{
+                      String id = FirebaseFirestore.instance
+                          .collection('PariEnCours')
+                          .doc()
+                          .id;
+                    //  Pari pari=Pari();
+                      monPari.id=id;
 
-                    pari.status=PariStatus.DISPONIBLE.name;
-                    for(Equipe eq in equipeProvider.teams_selected){
-                      pari.teams_id!.add(eq.id!);
+                      monPari.status=PariStatus.PARIER.name;
+                      for(Equipe eq in monPari.teams!){
+                        monPari.teams_id!.add(eq.id!);
+                      }
+                   //   pari.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
+                   //   pari.updatedAt= DateTime.now().millisecondsSinceEpoch;
+                      await FirebaseFirestore.instance.collection('PariEnCours').doc(id).set(monPari.toJson());
+                      widget.pari.status=PariStatus.PARIER.name;
+                      await equipeProvider.updatePari(widget.pari, context);
+
+                        MatchPari match=MatchPari();
+                      String match_id = FirebaseFirestore.instance
+                          .collection('PariEnCours')
+                          .doc()
+                          .id;
+                        match.id=match_id;
+                        match.pari_a=monPari;
+                        match.pari_a_id=monPari.id;
+                        match.pari_b=widget.pari;
+                        match.pari_b_id=widget.pari.id;
+                        match.user_a_id=serviceProvider.loginUser.id_db!;
+                        match.user_b_id=widget.pari.user_id;
+                        match.montant=widget.pari.montant;
+                        match.status=MatchStatus.ENCOURS.name;
+                      match.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
+                      match.updatedAt= DateTime.now().millisecondsSinceEpoch;
+                      await FirebaseFirestore.instance.collection('Matches').doc(match.id).set(match.toJson());
+
+                      SnackBar snackBar = SnackBar(
+                        content: Text(
+                          "Le pari a été ajouté avec succès",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.green),
+                        ),
+                      );
+                     // equipeProvider.teams_selected=[];
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(snackBar);
+                      setState(() {
+                        onTap=false;
+                      });
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MatchLive(match: match,),));
+
+
+                    }catch(e){
+                      setState(() {
+                        onTap=false;
+                      });
+                      SnackBar snackBar = SnackBar(
+                        content: Text(
+                          "Désolé, une erreur s'est produite. Veuillez vérifier votre connexion et réessayer ",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      );
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(snackBar);
+
                     }
-                    pari.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
-                    pari.updatedAt= DateTime.now().millisecondsSinceEpoch;
-                    await FirebaseFirestore.instance.collection('PariEnCours').doc(id).set(pari.toJson());
-                    SnackBar snackBar = SnackBar(
-                      content: Text(
-                        "Le pari a été créé avec succès, veuillez le voir dans la liste des paris en cours.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.green),
-                      ),
-                    );
-                    equipeProvider.teams_selected=[];
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(snackBar);
-                    setState(() {
-                      onTap=false;
-                    });
+
                   }  else{
                     SnackBar snackBar = SnackBar(
                       content: Text(
@@ -503,7 +546,7 @@ class _DetailsPariState extends State<DetailsPari> {
                   // Traiter le montant saisi
                 }
 
-                 */
+
 
               }, child: Container(
                   alignment: Alignment.center,

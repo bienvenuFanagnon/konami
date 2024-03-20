@@ -174,77 +174,76 @@ class _PariEnCoursState extends State<PariEnCours> {
           automaticallyImplyLeading: false,
           title: Text('Pari En Cours'),
         ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: height,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('Les paries en cours'),
-                        /*
-                        GestureDetector(
-                          onTap: () {
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: height,
+              child: ListView(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text('Les paries en cours'),
+                      /*
+                      GestureDetector(
+                        onTap: () {
 
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => TeamSelectedPage(),
-                                ));
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 20.0),
-                            child: badges.Badge(
-                              badgeContent: Text(
-                                '${equipeProvider.teams_selected.length}',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              child: Icon(Icons.shopping_cart),
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TeamSelectedPage(),
+                              ));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: badges.Badge(
+                            badgeContent: Text(
+                              '${equipeProvider.teams_selected.length}',
+                              style: TextStyle(color: Colors.white),
                             ),
+                            child: Icon(Icons.shopping_cart),
                           ),
                         ),
+                      ),
 
-                         */
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                       */
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
 
-                    StreamBuilder<List<Pari>>(
-                        stream: equipeProvider.getListPari(),
-                        builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  StreamBuilder<List<Pari>>(
+                      stream: equipeProvider.getListPari(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
 
-                          if (snapshot.hasData) {
-                            List<Pari> paries =snapshot.data;
-                            return SingleChildScrollView(
-                              child: SizedBox(
-                                height: height*0.9,
-                                width: width,                                    //    height: height*0.5,
-                                //   width: width,
-                                child: ListView.builder(
+                        if (snapshot.hasData) {
+                          List<Pari> paries =snapshot.data;
+                          return SizedBox(
+                            height: height*0.76,
+                            width: width,                                    //    height: height*0.5,
+                            //   width: width,
+                            child: ListView.builder(
 
-                                  itemCount: paries.length,
-                                  itemBuilder: (BuildContext context,
-                                      int index) {
-                                    Pari pari = snapshot.data[index];
-                                    return item(pari, width, height);
-                                  },),
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Icon(Icons.error_outline);
-                          } else {
-                            return CircularProgressIndicator();
-                          }
-                        })
-                  ],
-                ),
+                              itemCount: paries.length,
+                              itemBuilder: (BuildContext context,
+                                  int index) {
+                                Pari pari = snapshot.data[index];
+                                return item(pari, width, height);
+                              },),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Icon(Icons.error_outline);
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      }),
+                  SizedBox(
+                    height: 300,
+                  ),
+                ],
               ),
             ),
           ),

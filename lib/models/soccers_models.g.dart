@@ -58,6 +58,10 @@ Map<String, dynamic> _$PariToJson(Pari instance) => <String, dynamic>{
 MatchPari _$MatchPariFromJson(Map<String, dynamic> json) => MatchPari()
   ..id = json['id'] as String?
   ..status = json['status'] as String?
+  ..pari_a_id = json['pari_a_id'] as String?
+  ..pari_b_id = json['pari_b_id'] as String?
+  ..user_a_id = json['user_a_id'] as String?
+  ..user_b_id = json['user_b_id'] as String?
   ..createdAt = json['createdAt'] as int?
   ..updatedAt = json['updatedAt'] as int?
   ..montant = (json['montant'] as num?)?.toDouble()
@@ -67,6 +71,10 @@ MatchPari _$MatchPariFromJson(Map<String, dynamic> json) => MatchPari()
 Map<String, dynamic> _$MatchPariToJson(MatchPari instance) => <String, dynamic>{
       'id': instance.id,
       'status': instance.status,
+      'pari_a_id': instance.pari_a_id,
+      'pari_b_id': instance.pari_b_id,
+      'user_a_id': instance.user_a_id,
+      'user_b_id': instance.user_b_id,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
       'montant': instance.montant,
