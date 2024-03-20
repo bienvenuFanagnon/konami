@@ -468,6 +468,7 @@ class _DetailsPariState extends State<DetailsPari> {
                           .id;
                     //  Pari pari=Pari();
                       monPari.id=id;
+                      monPari.score=0;
 
                       monPari.status=PariStatus.PARIER.name;
                       for(Equipe eq in monPari.teams!){
@@ -492,7 +493,7 @@ class _DetailsPariState extends State<DetailsPari> {
                         match.user_a_id=serviceProvider.loginUser.id_db!;
                         match.user_b_id=widget.pari.user_id;
                         match.montant=widget.pari.montant;
-                        match.status=MatchStatus.ENCOURS.name;
+                        match.status=MatchStatus.ATTENTE.name;
                       match.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
                       match.updatedAt= DateTime.now().millisecondsSinceEpoch;
                       await FirebaseFirestore.instance.collection('Matches').doc(match.id).set(match.toJson());

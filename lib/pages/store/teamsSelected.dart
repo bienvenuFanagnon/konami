@@ -230,6 +230,7 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                           .id;
                       Pari pari=Pari();
                       pari.id=id;
+                      pari.score=0;
                       pari.teams=[];
                       pari.montant=double.parse(montantController.text);
                       pari.user_id=serviceProvider.loginUser.id_db!;

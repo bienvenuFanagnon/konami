@@ -50,6 +50,7 @@ dependencies:
   shared_preferences: ^2.2.2
   pulp_flash: ^0.0.6
   flutter_ticket: ^1.0.1
+  flutter_timer_countdown: ^1.0.7
 
 
     # The following adds the Cupertino Icons font to your application.

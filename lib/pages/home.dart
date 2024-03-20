@@ -4,7 +4,7 @@ import 'package:konami_bet/pages/pariencours.dart';
 import 'package:provider/provider.dart';
 import '../providers/providers.dart';
 import 'account.dart';
-import 'pariaccepter.dart';
+import 'matche_non_jouer.dart';
 import 'history.dart';
 import 'homepages.dart';
 
@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
     PariEnCours(),
     HomePage(),
 
-    PariAccepter(),
+    MyListMatch(),
     AccountPage(),
   ];
 
@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           BottomNavigationBarItem(
             icon: Icon(Icons.check_circle),
-            label: 'Accepter',
+            label: 'Matches',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),

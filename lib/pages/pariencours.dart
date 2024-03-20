@@ -237,7 +237,7 @@ class _PariEnCoursState extends State<PariEnCours> {
                         } else if (snapshot.hasError) {
                           return Icon(Icons.error_outline);
                         } else {
-                          return CircularProgressIndicator();
+                          return Container( height: 50,width: 50,  child: CircularProgressIndicator());
                         }
                       }),
                   SizedBox(
