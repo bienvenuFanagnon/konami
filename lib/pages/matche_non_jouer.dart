@@ -237,7 +237,7 @@ class _MyListMatchState extends State<MyListMatch> {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text('Match En Cours'),
+          title: Text('Matchs En Cours'),
         ),
         body: RefreshIndicator(
 
@@ -257,7 +257,7 @@ class _MyListMatchState extends State<MyListMatch> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('Les matches non jouer'),
+                        Text('Les matchs non jouer'),
                         /*
                         GestureDetector(
                           onTap: () {
@@ -288,7 +288,7 @@ class _MyListMatchState extends State<MyListMatch> {
                     ),
 
                     StreamBuilder<List<MatchPari>>(
-                        stream: equipeProvider.getListMatch(),
+                        stream: equipeProvider.getListMatch(serviceProvider.loginUser.id_db!),
                         builder: (BuildContext context, AsyncSnapshot snapshot) {
 
                           if (snapshot.hasData) {

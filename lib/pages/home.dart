@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:konami_bet/pages/pariencours.dart';
+import 'package:konami_bet/pages/profil/profile.dart';
 import 'package:provider/provider.dart';
 import '../providers/providers.dart';
 import 'account.dart';
@@ -33,12 +35,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<Widget> _pages = [
 
 
-    HistoryPage(),
+    MyHistoListMatch(),
     PariEnCours(),
     HomePage(),
 
     MyListMatch(),
-    AccountPage(),
+    Profil(),
   ];
 
   @override
@@ -77,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
 
           BottomNavigationBarItem(
-            icon: Icon(Icons.check_circle),
+            icon: Icon(MaterialCommunityIcons.soccer_field),
             label: 'Matches',
           ),
           BottomNavigationBarItem(

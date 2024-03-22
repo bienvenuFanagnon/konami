@@ -11,6 +11,7 @@ import 'package:konami_bet/pages/auth/registration.dart';
 import 'package:konami_bet/pages/auth/verify.dart';
 import 'package:konami_bet/pages/chargement_login.dart';
 import 'package:konami_bet/pages/home.dart';
+import 'package:konami_bet/pages/profil/profile.dart';
 import 'package:konami_bet/providers/equipe_provider.dart';
 import 'package:konami_bet/services/soccer_services.dart';
 import 'firebase_options.dart';
@@ -102,6 +103,7 @@ class _MyAppState extends State<MyApp> {
         'homeAdm': (context) => AdminHomePage(),
         'login': (context) => RegistrationPage(),
         'chargement': (context) => SplahsChargement(),
+        'profil': (context) => Profil(),
       },
 
     );

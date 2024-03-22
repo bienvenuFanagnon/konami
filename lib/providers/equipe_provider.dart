@@ -138,11 +138,21 @@ class EquipeProvider extends ChangeNotifier {
 
   }
 
-  Stream<List<Pari>> getListPari() async* {
+  Stream<List<Pari>> getListPari(String user_id) async* {
     var pariStream = FirebaseFirestore.instance.collection('PariEnCours')
        // .where("entreprise_id",isEqualTo:'${entrepriseId}')
 
-        .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
+
+        .where( Filter.or(
+      Filter('status', isEqualTo:  '${PariStatus.ATTENTE.name}'),
+      Filter('status', isEqualTo:  '${PariStatus.DISPONIBLE.name}'),
+      Filter('status', isEqualTo:  '${PariStatus.ENCOURS.name}'),
+
+    ))
+        .where("user_id",isNotEqualTo:'${user_id}')
+        .orderBy('user_id', descending: true) // Ordering by 'user_id' (matches filter)
+
+    //  .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
         .orderBy("status")  // Order by status first
         .orderBy("createdAt", descending: true)
        // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
@@ -189,11 +199,273 @@ class EquipeProvider extends ChangeNotifier {
       yield listPari;
     }
   }
-  Stream<List<MatchPari>> getListMatch() async* {
+
+  Stream<List<Pari>> getUserAllListPari(String user_id) async* {
+    var pariStream = FirebaseFirestore.instance.collection('PariEnCours')
+    // .where("entreprise_id",isEqualTo:'${entrepriseId}')
+        .where( 'user_id', isEqualTo:  user_id!
+
+    )
+       // .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
+      //  .orderBy("status")  // Order by status first
+        .orderBy("createdAt", descending: true)
+    // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+
+
+        .snapshots();
+    List<Pari> paries = [];
+    listPari =[];
+    //  UserData userData=UserData();
+    await for (var snapshot in pariStream) {
+      paries = [];
+      listPari =[];
+
+      for (var post in snapshot.docs) {
+        //  print("post : ${jsonDecode(post.toString())}");
+        Pari p=Pari.fromJson(post.data());
+        p.teams=[];
+        CollectionReference equipeCollect = await FirebaseFirestore.instance.collection('Equipes');
+
+        CollectionReference friendCollect = await FirebaseFirestore.instance.collection('Utilisateur');
+        QuerySnapshot querySnapshotUser = await friendCollect.where("id_db",isEqualTo:'${p.user_id}').get();
+        // Afficher la liste
+
+
+        List<Utilisateur> userList = querySnapshotUser.docs.map((doc) =>
+            Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+        p.user=userList.first;
+        for(String eqid in p.teams_id!){
+          QuerySnapshot querySnapshotPari = await equipeCollect.where("id",isEqualTo:'${eqid}').get();
+          // Afficher la liste
+
+
+          List<Equipe> teamList = querySnapshotPari.docs.map((doc) =>
+              Equipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
+          p.teams!.add(teamList.first);
+
+        }
+        paries.add(p);
+        listPari=paries;
+
+
+      }
+      yield listPari;
+    }
+  }
+  Stream<List<Pari>> getUserHistoListPari(String user_id) async* {
+    var pariStream = FirebaseFirestore.instance.collection('PariEnCours')
+    // .where("entreprise_id",isEqualTo:'${entrepriseId}')
+
+       // .where("status",isEqualTo:'${PariStatus.PARIER.name}')
+       // .orderBy("status")
+        .where( 'user_id', isEqualTo:  user_id! )// Order by status first
+        .orderBy("createdAt", descending: true)
+    // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+
+
+        .snapshots();
+    List<Pari> paries = [];
+    listPari =[];
+    //  UserData userData=UserData();
+    await for (var snapshot in pariStream) {
+      paries = [];
+      listPari =[];
+
+      for (var post in snapshot.docs) {
+        //  print("post : ${jsonDecode(post.toString())}");
+        Pari p=Pari.fromJson(post.data());
+        p.teams=[];
+        CollectionReference equipeCollect = await FirebaseFirestore.instance.collection('Equipes');
+
+        CollectionReference friendCollect = await FirebaseFirestore.instance.collection('Utilisateur');
+        QuerySnapshot querySnapshotUser = await friendCollect.where("id_db",isEqualTo:'${p.user_id}').get();
+        // Afficher la liste
+
+
+        List<Utilisateur> userList = querySnapshotUser.docs.map((doc) =>
+            Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+        p.user=userList.first;
+        for(String eqid in p.teams_id!){
+          QuerySnapshot querySnapshotPari = await equipeCollect.where("id",isEqualTo:'${eqid}').get();
+          // Afficher la liste
+
+
+          List<Equipe> teamList = querySnapshotPari.docs.map((doc) =>
+              Equipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
+          p.teams!.add(teamList.first);
+
+        }
+        paries.add(p);
+        listPari=paries;
+
+
+      }
+      yield listPari;
+    }
+  }
+
+  Stream<List<Pari>> getUserPariResultStatus(String user_id,String status) async* {
+    var pariStream = FirebaseFirestore.instance.collection('PariEnCours')
+    // .where("entreprise_id",isEqualTo:'${entrepriseId}')
+
+        .where("resultStatus",isEqualTo:'${status}')
+    // .orderBy("status")
+        .where( 'user_id', isEqualTo:  user_id! )// Order by status first
+        .orderBy("createdAt", descending: true)
+    // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+
+
+        .snapshots();
+    List<Pari> paries = [];
+    listPari =[];
+    //  UserData userData=UserData();
+    await for (var snapshot in pariStream) {
+      paries = [];
+      listPari =[];
+
+      for (var post in snapshot.docs) {
+        //  print("post : ${jsonDecode(post.toString())}");
+        Pari p=Pari.fromJson(post.data());
+        p.teams=[];
+        CollectionReference equipeCollect = await FirebaseFirestore.instance.collection('Equipes');
+
+        CollectionReference friendCollect = await FirebaseFirestore.instance.collection('Utilisateur');
+        QuerySnapshot querySnapshotUser = await friendCollect.where("id_db",isEqualTo:'${p.user_id}').get();
+        // Afficher la liste
+
+
+        List<Utilisateur> userList = querySnapshotUser.docs.map((doc) =>
+            Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+        p.user=userList.first;
+        for(String eqid in p.teams_id!){
+          QuerySnapshot querySnapshotPari = await equipeCollect.where("id",isEqualTo:'${eqid}').get();
+          // Afficher la liste
+
+
+          List<Equipe> teamList = querySnapshotPari.docs.map((doc) =>
+              Equipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
+          p.teams!.add(teamList.first);
+
+        }
+        paries.add(p);
+        listPari=paries;
+
+
+      }
+      yield listPari;
+    }
+  }
+
+  Stream<List<MatchPari>> getHistoListMatch(String user_id) async* {
+    var pariStream = FirebaseFirestore.instance.collection('Matches')
+    // .where("entreprise_id",isEqualTo:'${entrepriseId}')
+    //  .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
+    // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+        .where( Filter.or(
+      Filter('user_a_id', isEqualTo:  user_id!),
+      Filter('user_b_id', isEqualTo:  user_id!),
+
+    ))
+        .where("status",isEqualTo:'${MatchStatus.FINISHED.name}')
+        //.orderBy("status")
+        .orderBy('createdAt', descending: true)
+
+        .snapshots();
+    List<MatchPari> matches = [];
+
+    //  UserData userData=UserData();
+    await for (var snapshot in pariStream) {
+      matches = [];
+      listPari =[];
+
+      for (var post in snapshot.docs) {
+        //  print("post : ${jsonDecode(post.toString())}");
+        MatchPari match=MatchPari.fromJson(post.data());
+        match.pari_a=Pari();
+        match.pari_b=Pari();
+        match.user_a=Utilisateur();
+        match.user_b=Utilisateur();
+        CollectionReference equipeCollect = await FirebaseFirestore.instance.collection('Equipes');
+
+
+        CollectionReference pariCollect1 = await FirebaseFirestore.instance.collection('PariEnCours');
+        QuerySnapshot querySnapshotPari1 = await pariCollect1.where("id",isEqualTo:'${match.pari_a_id}').get();
+
+        CollectionReference pariCollect2 = await FirebaseFirestore.instance.collection('PariEnCours');
+        QuerySnapshot querySnapshotPari2 = await pariCollect2.where("id",isEqualTo:'${match.pari_b_id}').get();
+
+
+        CollectionReference friendCollect1 = await FirebaseFirestore.instance.collection('Utilisateur');
+        QuerySnapshot querySnapshotUser1 = await friendCollect1.where("id_db",isEqualTo:'${match.user_a_id}').get();
+        CollectionReference friendCollect2 = await FirebaseFirestore.instance.collection('Utilisateur');
+        QuerySnapshot querySnapshotUser2 = await friendCollect2.where("id_db",isEqualTo:'${match.user_b_id}').get();
+
+        //Paries
+
+        List<Pari> pariList1 = querySnapshotPari1.docs.map((doc) =>
+            Pari.fromJson(doc.data() as Map<String, dynamic>)).toList();
+        List<Pari> pariList2= querySnapshotPari2.docs.map((doc) =>
+            Pari.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+
+
+        //Users
+        List<Utilisateur> userList1 = querySnapshotUser1.docs.map((doc) =>
+            Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+        List<Utilisateur> userList2= querySnapshotUser2.docs.map((doc) =>
+            Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+        match.user_a=userList1.first;
+        match.user_b=userList2.first;
+        match.pari_a=pariList1.first;
+        match.pari_b=pariList2.first;
+        for(String eqid in  match.pari_a!.teams_id!){
+          QuerySnapshot querySnapshotEquipe = await equipeCollect.where("id",isEqualTo:'${eqid}').get();
+          // Afficher la liste
+
+
+          List<Equipe> teamList = querySnapshotEquipe.docs.map((doc) =>
+              Equipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
+          match.pari_a!.teams!.add(teamList.first);
+
+        }
+        for(String eqid in  match.pari_b!.teams_id!){
+          QuerySnapshot querySnapshotEquipe = await equipeCollect.where("id",isEqualTo:'${eqid}').get();
+          // Afficher la liste
+
+
+          List<Equipe> teamList = querySnapshotEquipe.docs.map((doc) =>
+              Equipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
+          match.pari_b!.teams!.add(teamList.first);
+
+        }
+
+
+        print("pari1 lght : ${pariList1.first.toJson()}");
+        print("pari2 lght : ${pariList2.first.toJson()}");
+        print("pari1 lght : ${pariList1.first.teams!.length}");
+        print("pari2 lght : ${pariList2.first.teams!.length}");
+        matches.add(match);
+        //  listPari=paries;
+
+
+      }
+      yield matches;
+    }
+  }
+  Stream<List<MatchPari>> getListMatch(String user_id) async* {
     var pariStream = FirebaseFirestore.instance.collection('Matches')
        // .where("entreprise_id",isEqualTo:'${entrepriseId}')
       //  .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
        // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+        .where( Filter.or(
+      Filter('user_a_id', isEqualTo:  user_id!),
+      Filter('user_b_id', isEqualTo:  user_id!),
+
+    ))
         .where("status",isNotEqualTo:'${MatchStatus.FINISHED.name}')
         .orderBy("status")
         .orderBy('createdAt', descending: true)

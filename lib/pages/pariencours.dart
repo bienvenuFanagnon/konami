@@ -185,7 +185,7 @@ class _PariEnCoursState extends State<PariEnCours> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text('Les paries en cours'),
+                      Text('Les paris en cours'),
                       /*
                       GestureDetector(
                         onTap: () {
@@ -217,7 +217,7 @@ class _PariEnCoursState extends State<PariEnCours> {
 
                   Center(
                     child: StreamBuilder<List<Pari>>(
-                        stream: equipeProvider.getListPari(),
+                        stream: equipeProvider.getListPari(serviceProvider.loginUser.id_db!),
                         builder: (BuildContext context, AsyncSnapshot snapshot) {
 
                           if (snapshot.hasData) {
