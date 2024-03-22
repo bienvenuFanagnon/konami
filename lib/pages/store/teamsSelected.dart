@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:konami_bet/models/soccers_models.dart';
 import 'package:provider/provider.dart';
@@ -106,7 +107,7 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                     padding: const EdgeInsets.only(right: 20.0),
                     child: badges.Badge(
                       badgeContent: Text('${equipeProvider.teams_selected.length}',style: TextStyle(color: Colors.white),),
-                      child: Icon(Icons.shopping_cart),
+                      child: Icon(MaterialCommunityIcons.soccer_field),
                     ),
                   ),
                 ],
@@ -231,6 +232,7 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                       Pari pari=Pari();
                       pari.id=id;
                       pari.score=0;
+                      pari.resultStatus=PariResultStatus.NAN.name;
                       pari.teams=[];
                       pari.montant=double.parse(montantController.text);
                       pari.user_id=serviceProvider.loginUser.id_db!;

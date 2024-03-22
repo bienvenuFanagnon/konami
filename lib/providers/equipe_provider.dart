@@ -141,9 +141,12 @@ class EquipeProvider extends ChangeNotifier {
   Stream<List<Pari>> getListPari() async* {
     var pariStream = FirebaseFirestore.instance.collection('PariEnCours')
        // .where("entreprise_id",isEqualTo:'${entrepriseId}')
-      //  .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
+
+        .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
+        .orderBy("status")  // Order by status first
+        .orderBy("createdAt", descending: true)
        // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
-        .orderBy('createdAt', descending: true)
+
 
         .snapshots();
     List<Pari> paries = [];
@@ -191,6 +194,8 @@ class EquipeProvider extends ChangeNotifier {
        // .where("entreprise_id",isEqualTo:'${entrepriseId}')
       //  .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
        // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+        .where("status",isNotEqualTo:'${MatchStatus.FINISHED.name}')
+        .orderBy("status")
         .orderBy('createdAt', descending: true)
 
         .snapshots();
@@ -276,6 +281,97 @@ class EquipeProvider extends ChangeNotifier {
       yield matches;
     }
   }
+
+  Stream<MatchPari> getOnLyStreamMatch(String id) async* {
+    var pariStream = FirebaseFirestore.instance.collection('Matches')
+    .where("id",isEqualTo:'${id}')
+    //  .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
+    // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+        //.orderBy('createdAt', descending: true)
+
+        .snapshots();
+    List<MatchPari> matches = [];
+
+    //  UserData userData=UserData();
+    await for (var snapshot in pariStream) {
+      matches = [];
+      listPari =[];
+
+      for (var post in snapshot.docs) {
+        //  print("post : ${jsonDecode(post.toString())}");
+        MatchPari match=MatchPari.fromJson(post.data());
+        match.pari_a=Pari();
+        match.pari_b=Pari();
+        match.user_a=Utilisateur();
+        match.user_b=Utilisateur();
+        CollectionReference equipeCollect = await FirebaseFirestore.instance.collection('Equipes');
+
+
+        CollectionReference pariCollect1 = await FirebaseFirestore.instance.collection('PariEnCours');
+        QuerySnapshot querySnapshotPari1 = await pariCollect1.where("id",isEqualTo:'${match.pari_a_id}').get();
+
+        CollectionReference pariCollect2 = await FirebaseFirestore.instance.collection('PariEnCours');
+        QuerySnapshot querySnapshotPari2 = await pariCollect2.where("id",isEqualTo:'${match.pari_b_id}').get();
+
+
+        CollectionReference friendCollect1 = await FirebaseFirestore.instance.collection('Utilisateur');
+        QuerySnapshot querySnapshotUser1 = await friendCollect1.where("id_db",isEqualTo:'${match.user_a_id}').get();
+        CollectionReference friendCollect2 = await FirebaseFirestore.instance.collection('Utilisateur');
+        QuerySnapshot querySnapshotUser2 = await friendCollect2.where("id_db",isEqualTo:'${match.user_b_id}').get();
+
+        //Paries
+
+        List<Pari> pariList1 = querySnapshotPari1.docs.map((doc) =>
+            Pari.fromJson(doc.data() as Map<String, dynamic>)).toList();
+        List<Pari> pariList2= querySnapshotPari2.docs.map((doc) =>
+            Pari.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+
+
+        //Users
+        List<Utilisateur> userList1 = querySnapshotUser1.docs.map((doc) =>
+            Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+        List<Utilisateur> userList2= querySnapshotUser2.docs.map((doc) =>
+            Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+        match.user_a=userList1.first;
+        match.user_b=userList2.first;
+        match.pari_a=pariList1.first;
+        match.pari_b=pariList2.first;
+        for(String eqid in  match.pari_a!.teams_id!){
+          QuerySnapshot querySnapshotEquipe = await equipeCollect.where("id",isEqualTo:'${eqid}').get();
+          // Afficher la liste
+
+
+          List<Equipe> teamList = querySnapshotEquipe.docs.map((doc) =>
+              Equipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
+          match.pari_a!.teams!.add(teamList.first);
+
+        }
+        for(String eqid in  match.pari_b!.teams_id!){
+          QuerySnapshot querySnapshotEquipe = await equipeCollect.where("id",isEqualTo:'${eqid}').get();
+          // Afficher la liste
+
+
+          List<Equipe> teamList = querySnapshotEquipe.docs.map((doc) =>
+              Equipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
+          match.pari_b!.teams!.add(teamList.first);
+
+        }
+
+
+        print("pari1 lght : ${pariList1.first.toJson()}");
+        print("pari2 lght : ${pariList2.first.toJson()}");
+        print("pari1 lght : ${pariList1.first.teams!.length}");
+        print("pari2 lght : ${pariList2.first.teams!.length}");
+        matches.add(match);
+        //  listPari=paries;
+
+
+      }
+      yield matches.first;
+    }
+  }
   Future<bool> updatePari(Pari pari,BuildContext context) async {
     try{
 
@@ -291,6 +387,116 @@ class EquipeProvider extends ChangeNotifier {
       print("erreur update post : ${e}");
       return false;
     }
+  }
+  Future<bool> updateMatch(MatchPari matchpari,BuildContext context) async {
+    try{
+
+
+
+      await FirebaseFirestore.instance
+          .collection('Matches')
+          .doc(matchpari.id)
+          .update(matchpari.toJson());
+
+      return true;
+    }catch(e){
+      print("erreur update post : ${e}");
+      return false;
+    }
+  }
+  Future<MatchPari> getOnlyMatch(String id) async {
+    //await getAppData();
+    late List<MatchPari> list= [];
+
+    CollectionReference collectionRef =
+    FirebaseFirestore.instance.collection('Matches');
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await collectionRef.where("id",isEqualTo: id!).get()
+        .then((value){
+
+      print(value);
+      return value;
+    }).catchError((onError){
+
+    });
+
+    // Get data from docs and convert map to List
+    list = querySnapshot.docs.map((doc) =>
+        MatchPari.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+    MatchPari match=list.first;
+    match.pari_a=Pari();
+    match.pari_b=Pari();
+    match.user_a=Utilisateur();
+    match.user_b=Utilisateur();
+    CollectionReference equipeCollect = await FirebaseFirestore.instance.collection('Equipes');
+
+
+    CollectionReference pariCollect1 = await FirebaseFirestore.instance.collection('PariEnCours');
+    QuerySnapshot querySnapshotPari1 = await pariCollect1.where("id",isEqualTo:'${match.pari_a_id}').get();
+
+    CollectionReference pariCollect2 = await FirebaseFirestore.instance.collection('PariEnCours');
+    QuerySnapshot querySnapshotPari2 = await pariCollect2.where("id",isEqualTo:'${match.pari_b_id}').get();
+
+
+    CollectionReference friendCollect1 = await FirebaseFirestore.instance.collection('Utilisateur');
+    QuerySnapshot querySnapshotUser1 = await friendCollect1.where("id_db",isEqualTo:'${match.user_a_id}').get();
+    CollectionReference friendCollect2 = await FirebaseFirestore.instance.collection('Utilisateur');
+    QuerySnapshot querySnapshotUser2 = await friendCollect2.where("id_db",isEqualTo:'${match.user_b_id}').get();
+
+    //Paries
+
+    List<Pari> pariList1 = querySnapshotPari1.docs.map((doc) =>
+        Pari.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    List<Pari> pariList2= querySnapshotPari2.docs.map((doc) =>
+        Pari.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+
+
+    //Users
+    List<Utilisateur> userList1 = querySnapshotUser1.docs.map((doc) =>
+        Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    List<Utilisateur> userList2= querySnapshotUser2.docs.map((doc) =>
+        Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+    match.user_a=userList1.first;
+    match.user_b=userList2.first;
+    match.pari_a=pariList1.first;
+    match.pari_b=pariList2.first;
+    for(String eqid in  match.pari_a!.teams_id!){
+      QuerySnapshot querySnapshotEquipe = await equipeCollect.where("id",isEqualTo:'${eqid}').get();
+      // Afficher la liste
+
+
+      List<Equipe> teamList = querySnapshotEquipe.docs.map((doc) =>
+          Equipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
+      match.pari_a!.teams!.add(teamList.first);
+
+    }
+    for(String eqid in  match.pari_b!.teams_id!){
+      QuerySnapshot querySnapshotEquipe = await equipeCollect.where("id",isEqualTo:'${eqid}').get();
+      // Afficher la liste
+
+
+      List<Equipe> teamList = querySnapshotEquipe.docs.map((doc) =>
+          Equipe.fromJson(doc.data() as Map<String, dynamic>)).toList();
+      match.pari_b!.teams!.add(teamList.first);
+
+    }
+
+
+    print("pari1 lght : ${pariList1.first.toJson()}");
+    print("pari2 lght : ${pariList2.first.toJson()}");
+    print("pari1 lght : ${pariList1.first.teams!.length}");
+    print("pari2 lght : ${pariList2.first.teams!.length}");
+   // matches.add(match);
+    //  listPari=paries;
+
+
+
+
+    return match;
+
   }
   Future<Pari> getOnlyPari(String id) async {
     //await getAppData();

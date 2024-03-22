@@ -58,6 +58,8 @@ class Utilisateur {
 class Pari {
     late String? id="";
     late String? user_id="";
+    late String? resultStatus="";
+
     late String? status="";
     late int? createdAt;
    late int? updatedAt;
@@ -130,6 +132,9 @@ enum TypePari{
 }
 enum PariStatus{
   DISPONIBLE,ENCOURS,ATTENTE,PARIER
+}
+enum PariResultStatus{
+  GAGNER,PERDU,NAN
 }
 enum ChoixPari{
   V1,X,V2

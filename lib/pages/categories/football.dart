@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:konami_bet/models/soccers_models.dart';
 import 'package:provider/provider.dart';
@@ -112,7 +113,7 @@ class _VictoirePageState extends State<FootballPage> {
                           '${equipeProvider.teams_selected.length}',
                           style: TextStyle(color: Colors.white),
                         ),
-                        child: Icon(Icons.shopping_cart),
+                        child: Icon(MaterialCommunityIcons.soccer_field),
                       ),
                     ),
                   ),

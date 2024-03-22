@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:konami_bet/models/soccers_models.dart';
 import 'package:provider/provider.dart';
@@ -58,6 +59,7 @@ class _MyListMatchState extends State<MyListMatch> {
                   // SizedBox(width: width*0.3,),
                   Text("${formaterDateMatch(DateTime.fromMillisecondsSinceEpoch(matchPari.createdAt!))}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
 
+                  Icon(MaterialIcons.live_tv,color: matchPari.status==MatchStatus.ENCOURS.name?Colors.green:Colors.black,),
 
 
                  // Icon(matchPari.status==MatchStatus.ENCOURS.name?Icons.lock_open_outlined:Icons.lock,color:matchPari.status==PariStatus.DISPONIBLE.name?Colors.green: Colors.red,)
@@ -141,7 +143,19 @@ class _MyListMatchState extends State<MyListMatch> {
                         onTap=true;
 
                       });
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MatchLive( match:matchPari ,),));
+                    await  equipeProvider.getOnlyMatch(matchPari.id!).then((value) {
+                        if (value.status==MatchStatus.ATTENTE.name) {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MatchLive( match:value ,),));
+
+                        }  else{
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => MatchLive( match:value ,),));
+
+                          print("match non disponible : ${value.status}");
+                        }
+                      },);
+
+
+
                       setStateb(() {
                         onTap=false;
 
@@ -188,14 +202,14 @@ class _MyListMatchState extends State<MyListMatch> {
                         height: 40,
                         width: 80,
                         decoration: BoxDecoration(
-                            color: matchPari.status==MatchStatus.ENCOURS.name?Colors.green: Colors.red,
+                            color: matchPari.status==MatchStatus.ATTENTE.name?Colors.green: Colors.red,
                             borderRadius: BorderRadius.all(Radius.circular(10))
                         ),
                         child: onTap? Container(
                             height: 20,
                             width: 20,
 
-                            child: CircularProgressIndicator()):Text("Jouer",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w900,fontSize: 15),)));
+                            child: CircularProgressIndicator()):matchPari.status==MatchStatus.ENCOURS.name?Text("Voir",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w900,fontSize: 15),):Text("Jouer",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w900,fontSize: 15),)));
                   }
               ),
               SizedBox(width: width*0.3,),
@@ -296,7 +310,7 @@ class _MyListMatchState extends State<MyListMatch> {
                             print("erreur ${snapshot.error.toString()}");
                             return Icon(Icons.error_outline);
                           } else {
-                            return Container( height: 50,width: 50,  child: CircularProgressIndicator());
+                            return Center(child: Container( height: 50,width: 50,  child: CircularProgressIndicator()));
                           }
                         }),
                     SizedBox(

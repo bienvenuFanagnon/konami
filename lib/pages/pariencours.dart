@@ -215,31 +215,34 @@ class _PariEnCoursState extends State<PariEnCours> {
                     height: 10,
                   ),
 
-                  StreamBuilder<List<Pari>>(
-                      stream: equipeProvider.getListPari(),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  Center(
+                    child: StreamBuilder<List<Pari>>(
+                        stream: equipeProvider.getListPari(),
+                        builder: (BuildContext context, AsyncSnapshot snapshot) {
 
-                        if (snapshot.hasData) {
-                          List<Pari> paries =snapshot.data;
-                          return SizedBox(
-                            height: height*0.76,
-                            width: width,                                    //    height: height*0.5,
-                            //   width: width,
-                            child: ListView.builder(
+                          if (snapshot.hasData) {
+                            List<Pari> paries =snapshot.data;
+                            return SizedBox(
+                              height: height*0.76,
+                              width: width,                                    //    height: height*0.5,
+                              //   width: width,
+                              child: ListView.builder(
 
-                              itemCount: paries.length,
-                              itemBuilder: (BuildContext context,
-                                  int index) {
-                                Pari pari = snapshot.data[index];
-                                return item(pari, width, height);
-                              },),
-                          );
-                        } else if (snapshot.hasError) {
-                          return Icon(Icons.error_outline);
-                        } else {
-                          return Container( height: 50,width: 50,  child: CircularProgressIndicator());
-                        }
-                      }),
+                                itemCount: paries.length,
+                                itemBuilder: (BuildContext context,
+                                    int index) {
+                                  Pari pari = snapshot.data[index];
+                                  return item(pari, width, height);
+                                },),
+                            );
+                          } else if (snapshot.hasError) {
+                            print("error ${snapshot.error}");
+                            return Icon(Icons.error_outline);
+                          } else {
+                            return Center(child: Container( height: 50,width: 50,  child: CircularProgressIndicator()));
+                          }
+                        }),
+                  ),
                   SizedBox(
                     height: 300,
                   ),
