@@ -55,6 +55,29 @@ class Utilisateur {
 }
 
 @JsonSerializable()
+class TransactionData {
+  late String id;
+  late String user_id;
+  late String type;
+  late String depotType; // "en attente", "validé", "rejeté"
+// "depot" ou "retrait"
+  late double montant;
+  late int? createdAt;
+  late int? updatedAt;
+  late String status; // "en attente", "validé", "rejeté"
+
+
+
+  TransactionData();
+
+  // Add a factory constructor that creates a new instance from a JSON map
+  factory TransactionData.fromJson(Map<String, dynamic> json) => _$TransactionDataFromJson(json);
+
+  // Add a method that converts this instance to a JSON map
+  Map<String, dynamic> toJson() => _$TransactionDataToJson(this);
+}
+
+@JsonSerializable()
 class Pari {
     late String? id="";
     late String? user_id="";
@@ -132,6 +155,15 @@ enum TypePari{
 }
 enum PariStatus{
   DISPONIBLE,ENCOURS,ATTENTE,PARIER
+}
+enum TransactionStatus{
+  ENCOURS,VALIDER,ANNULER
+}
+enum TypeTransaction{
+  DEPOT,RETRAIT
+}
+enum TypeTranDepot{
+  INTERNE,EXTERNE
 }
 enum PariResultStatus{
   GAGNER,PERDU,NAN

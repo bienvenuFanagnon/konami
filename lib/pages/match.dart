@@ -31,6 +31,57 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
   Provider.of<EquipeProvider>(context, listen: false);
   bool onTap=false;
 
+  void showWinBottomSheet(BuildContext context, double gains) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 300,
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "Félicitations ! ",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "Vous avez gagné ce match !",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  "Vos gains : ${gains.toStringAsFixed(2)} €",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Continuer"),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -39,6 +90,8 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat();
+
+
   }
 
   @override
@@ -111,9 +164,51 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                                   match.pari_b!.score=genererScoreAleatoire();
                                                 }
                                                 if (match.pari_a!.score!>match.pari_b!.score!) {
+
+                                                  await  serviceProvider.getMatchUserById(match.pari_a!.user_id!,context).then((user) async {
+                                                   // print("avant : ${user.montant}");
+                                                    double gain=((match.montant!*2)-0.1*(match.montant!*2));
+
+                                                    user.montant=user.montant+gain;
+                                                  //  print("apres : ${user.montant}");
+                                                    await  serviceProvider.updateUser(user, context);
+
+                                                    TransactionData transaction = TransactionData(// Pending, validated, or rejected
+                                                    );
+                                                    //transaction.id="";
+                                                    transaction.user_id= user.id_db!;
+                                                    transaction.type=TypeTransaction.DEPOT.name;
+                                                    transaction.depotType=TypeTranDepot.INTERNE.name;
+                                                    transaction.montant=gain;
+                                                    transaction.status=TransactionStatus.VALIDER.name;
+                                                    transaction.createdAt=DateTime.now().millisecondsSinceEpoch;
+                                                    transaction.updatedAt=DateTime.now().millisecondsSinceEpoch;
+                                                  await  equipeProvider.createTransaction(transaction);
+
+                                                  },);
+
                                                   match.pari_a!.resultStatus=PariResultStatus.GAGNER.name;
                                                   match.pari_b!.resultStatus=PariResultStatus.PERDU.name;
                                                 } else{
+                                                  await  serviceProvider.getMatchUserById(match.pari_b!.user_id!,context).then((user) async {
+                                                   // print("avant : ${user.montant}");
+                                                    double gain=((match.montant!*2)-0.1*(match.montant!*2));
+
+                                                    user.montant=user.montant+gain;
+                                                 //   print("apres : ${user.montant}");
+                                                    await  serviceProvider.updateUser(user, context);
+                                                    TransactionData transaction = TransactionData(// Pending, validated, or rejected
+                                                    );
+                                                    //transaction.id="";
+                                                    transaction.user_id= user.id_db!;
+                                                    transaction.type=TypeTransaction.DEPOT.name;
+                                                    transaction.depotType=TypeTranDepot.INTERNE.name;
+                                                    transaction.montant=gain;
+                                                    transaction.status=TransactionStatus.VALIDER.name;
+                                                    transaction.createdAt=DateTime.now().millisecondsSinceEpoch;
+                                                    transaction.updatedAt=DateTime.now().millisecondsSinceEpoch;
+                                                    await  equipeProvider.createTransaction(transaction);
+                                                  },);
                                                   match.pari_a!.resultStatus=PariResultStatus.PERDU.name;
                                                   match.pari_b!.resultStatus=PariResultStatus.GAGNER.name;
                                                 }

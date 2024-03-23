@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:konami_bet/pages/auth/verify.dart';
+
+import 'function.dart';
 
 class MyPhone extends StatefulWidget {
   const MyPhone({Key? key}) : super(key: key);
@@ -14,6 +18,78 @@ class _MyPhoneState extends State<MyPhone> {
   TextEditingController countryController = TextEditingController();
   late String phone="";
   late bool _isLoading = false;
+  showErrorDialog(BuildContext context,String text) {
+    AwesomeDialog(
+      context: context,
+      animType: AnimType.leftSlide,
+      headerAnimationLoop: true,
+      dialogType: DialogType.error,
+      showCloseIcon: true,
+      title: "Envoi code SMS",
+      desc:
+      text,
+      btnCancelOnPress: () {
+        debugPrint('OnClcik');
+      },
+      btnOkIcon: Icons.error,
+      onDismissCallback: (type) {
+        debugPrint('Dialog Dissmiss from callback $type');
+      },
+    ).show();
+
+  }
+  sendOtpCode(String phone) {
+    //onTap = true;
+    setState(() {
+      _isLoading = true;
+    });
+    final _auth = FirebaseAuth.instance;
+    if (phone.isNotEmpty) {
+
+      // notData=false;
+
+      authWithPhoneNumber(phone, onCodeSend: (verificationId, v) {
+      //  onTap = false;
+        setState(() {});
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (c) => VerificationOtp(
+              verificationId: verificationId,
+              phoneNumber: phone,
+            )));
+      }, onAutoVerify: (v) async {
+        await _auth.signInWithCredential(v);
+        setState(() {
+          _isLoading = false;
+        });
+     //   Navigator.of(context).pop();
+      },  onFailed: (e) {
+    //    onTap = false;
+        setState(() {
+          _isLoading = false;
+        });
+        var errorMessage = "An error occurred";
+        switch (e.code) {
+          case 'invalid-phone-number':
+            errorMessage = 'Le numéro de téléphone saisi est invalide.';
+            break;
+          case 'too-many-requests':
+            errorMessage = 'Vous avez fait trop de demandes. Veuillez réessayer plus tard.';
+            break;
+          default:
+            errorMessage = 'Une erreur inconnue est survenue. Veuillez réessayer plus tard';
+        //errorMessage = e.toString();
+        }
+        showErrorDialog( context, errorMessage);
+        print(" erreur : ${e.toString()}");
+      }, autoRetrieval: (v) {});
+    }else{
+      //onTap = false;
+      // notData=true;
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
 
   @override
@@ -44,14 +120,14 @@ class _MyPhoneState extends State<MyPhone> {
                     height: 25,
                   ),
                   Text(
-                    "Phone Verification",
+                    "Se Connecter",
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
-                    "We need to register your phone without getting started!",
+                    "Veuillez saisir votre numéro de téléphone valide pour se connecter ou créer un compte",
                     style: TextStyle(
                       fontSize: 16,
                     ),
@@ -118,6 +194,9 @@ class _MyPhoneState extends State<MyPhone> {
                      setState(() {
                        _isLoading = true;
                      });
+                    await sendOtpCode('${countryController.text+phone}');
+
+                     /*
                      await FirebaseAuth.instance.verifyPhoneNumber(
                        phoneNumber: '${countryController.text+phone}',
                        verificationCompleted: (PhoneAuthCredential credential) {
@@ -144,19 +223,23 @@ class _MyPhoneState extends State<MyPhone> {
                        codeSent: (String verificationId, int? resendToken) {
                          MyPhone.verify= verificationId;
                          setState(() {
-                           phone="";
+                          // phone="";
                            _isLoading = false;
                          });
+
+                         print( '${countryController.text+phone}');
 
                          Navigator.pushNamed(context, 'verify');
                        },
                        codeAutoRetrievalTimeout: (String verificationId) {},
                      );
+
+                      */
                    }
                           //Navigator.pushNamed(context, 'verify');
 
                         },
-                        child: Text("Send the code")),
+                        child: Text("Envoyer le code",style: TextStyle(color: Colors.white),)),
                   )
                 ],
               ),

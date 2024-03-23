@@ -35,6 +35,29 @@ Map<String, dynamic> _$UtilisateurToJson(Utilisateur instance) =>
       'montant': instance.montant,
     };
 
+TransactionData _$TransactionDataFromJson(Map<String, dynamic> json) =>
+    TransactionData()
+      ..id = json['id'] as String
+      ..user_id = json['user_id'] as String
+      ..type = json['type'] as String
+      ..depotType = json['depotType'] as String
+      ..montant = (json['montant'] as num).toDouble()
+      ..createdAt = json['createdAt'] as int?
+      ..updatedAt = json['updatedAt'] as int?
+      ..status = json['status'] as String;
+
+Map<String, dynamic> _$TransactionDataToJson(TransactionData instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'user_id': instance.user_id,
+      'type': instance.type,
+      'depotType': instance.depotType,
+      'montant': instance.montant,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
+      'status': instance.status,
+    };
+
 Pari _$PariFromJson(Map<String, dynamic> json) => Pari()
   ..id = json['id'] as String?
   ..user_id = json['user_id'] as String?

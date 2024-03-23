@@ -282,14 +282,15 @@ class UtilisateurService {
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 // fonctions creer, recuperer, effacer et mise a jurs des donnees firebase
-  Future<String> create(Utilisateur data) async {
+  Future<String> create(Utilisateur data,String userid) async {
     String id = firestore
         .collection('Utilisateur')
         .doc()
         .id;
+    data.id_db=userid;
 
     try{
-      final DocumentReference<Map<String, dynamic>> docRef = FirebaseFirestore.instance.collection('Utilisateur').doc(id);
+      final DocumentReference<Map<String, dynamic>> docRef = FirebaseFirestore.instance.collection('Utilisateur').doc(userid);
       docRef.set(data.toJson());
 
 

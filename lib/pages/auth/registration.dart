@@ -1,12 +1,18 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:provider/provider.dart';
+
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:konami_bet/providers/providers.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/providers.dart';
 
 class RegistrationPage extends StatefulWidget {
+  final String user_id;
+  final String phone;
+  const RegistrationPage({super.key, required this.user_id, required this.phone});
+
   @override
-  _RegistrationPageState createState() => _RegistrationPageState();
+  State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
@@ -104,11 +110,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
               SizedBox(height: 20.0),
               TextButton(
                 child: Text('S\'inscrire'),
-                onPressed: () {
+                onPressed: () async {
                   if(nameController.text.length>1 && _selectedCountry.length>1){
-                    serviceProvider.createUser(nameController.text, _selectedCountry, codeController.text, context);
+               await     serviceProvider.createUser(nameController.text, _selectedCountry, codeController.text,widget.user_id,widget.phone, context);
 
-
+               ScaffoldMessenger.of(context).showSnackBar(
+                 SnackBar(
+                   content: Text('Votre compte a été créé avec succès !'),
+                   backgroundColor: Colors.green,
+                 ),
+               );
                   }else{
                     Fluttertoast.showToast(msg: 'Pas de donnee vide.',backgroundColor: Colors.red);
 

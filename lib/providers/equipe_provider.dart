@@ -11,6 +11,8 @@ class EquipeProvider extends ChangeNotifier {
   List<Equipe> teams =[];
   List<Equipe> teams_selected =[];
   List<Pari> listPari = [];
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   int genererScoreAleatoire() {
     Random random = Random();
     return random.nextInt(10);
@@ -192,6 +194,7 @@ class EquipeProvider extends ChangeNotifier {
 
         }
         paries.add(p);
+        print("pari lgt : ${listPari.length}");
         listPari=paries;
 
 
@@ -644,6 +647,7 @@ class EquipeProvider extends ChangeNotifier {
       yield matches.first;
     }
   }
+
   Future<bool> updatePari(Pari pari,BuildContext context) async {
     try{
 
@@ -795,5 +799,119 @@ class EquipeProvider extends ChangeNotifier {
     return list.first;
 
   }
+
+  Future<String> createTransaction(TransactionData data) async {
+    String id = firestore
+        .collection('Transactions')
+        .doc()
+        .id;
+    data.id=id;
+
+    try{
+      final DocumentReference<Map<String, dynamic>> docRef = FirebaseFirestore.instance.collection('Transactions').doc(id);
+      docRef.set(data.toJson());
+
+
+      //  await firestore.collection('Matches').doc(id).set(data.toJson());
+      print("///////////-- SAVE transaction --///////////////");
+    } on FirebaseException catch(error){
+
+    }
+    return id;
+  }
+  Stream<List<TransactionData>> getUserTransactionDepot(String user_id) async* {
+    print("Transactions");
+    var pariStream = FirebaseFirestore.instance.collection('Transactions')
+    // .where("entreprise_id",isEqualTo:'${entrepriseId}')
+
+        .where("type",isEqualTo:'${TypeTransaction.DEPOT.name}')
+    // .orderBy("status")
+        .where( 'user_id', isEqualTo:  user_id! )// Order by status first
+        .orderBy("createdAt", descending: true)
+    // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+
+
+        .snapshots();
+    List<TransactionData> transactions = [];
+    listPari =[];
+    //  UserData userData=UserData();
+    await for (var snapshot in pariStream) {
+    //  transactions = [];
+      listPari =[];
+
+      for (var trans in snapshot.docs) {
+        //  print("post : ${jsonDecode(post.toString())}");
+        TransactionData transactionData=TransactionData.fromJson(trans.data());
+
+        print("trans: ${transactionData.toJson()}");
+
+/*
+        CollectionReference friendCollect = await FirebaseFirestore.instance.collection('Utilisateur');
+        QuerySnapshot querySnapshotUser = await friendCollect.where("id_db",isEqualTo:'${transactionData.user_id}').get();
+        // Afficher la liste
+
+
+
+
+        List<Utilisateur> userList = querySnapshotUser.docs.map((doc) =>
+            Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+ */
+
+       // transactionData.user=userList.first;
+
+        transactions.add(transactionData);
+      //  listPari=paries;
+        print("tl: ${transactions.length}");
+
+
+      }
+      yield transactions;
+    }
+  }
+
+  Stream<List<TransactionData>> getUserTransactionRetrait(String user_id) async* {
+    var pariStream = FirebaseFirestore.instance.collection('Transactions')
+    // .where("entreprise_id",isEqualTo:'${entrepriseId}')
+
+        .where("type",isEqualTo:'${TypeTransaction.RETRAIT.name}')
+    // .orderBy("status")
+        .where( 'user_id', isEqualTo:  user_id! )// Order by status first
+        .orderBy("createdAt", descending: true)
+    // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+
+
+        .snapshots();
+    List<TransactionData> transactions = [];
+    listPari =[];
+    //  UserData userData=UserData();
+    await for (var snapshot in pariStream) {
+      transactions = [];
+      listPari =[];
+
+      for (var trans in snapshot.docs) {
+        //  print("post : ${jsonDecode(post.toString())}");
+        TransactionData transactionData=TransactionData.fromJson(trans.data());
+
+
+        CollectionReference friendCollect = await FirebaseFirestore.instance.collection('Utilisateur');
+        QuerySnapshot querySnapshotUser = await friendCollect.where("id_db",isEqualTo:'${transactionData.user_id}').get();
+        // Afficher la liste
+
+
+        List<Utilisateur> userList = querySnapshotUser.docs.map((doc) =>
+            Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+        // transactionData.user=userList.first;
+
+        transactions.add(transactionData);
+        //  listPari=paries;
+
+
+      }
+      yield transactions;
+    }
+  }
+
 }
 

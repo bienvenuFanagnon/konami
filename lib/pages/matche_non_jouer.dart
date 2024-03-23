@@ -22,7 +22,7 @@ class _MyListMatchState extends State<MyListMatch> {
   Provider.of<ServiceProvider>(context, listen: false);
   late EquipeProvider equipeProvider =
   Provider.of<EquipeProvider>(context, listen: false);
-  String formatDateMatch = "dd MMM yyyy";
+  String formatDateMatch = "dd/MM/yyyy HH:mm";
   bool onTap=false;
   String formaterDateMatch(DateTime date) {
     return DateFormat(formatDateMatch).format(date);
@@ -73,6 +73,8 @@ class _MyListMatchState extends State<MyListMatch> {
                 children: [
                   Column(
                     children: [
+                      matchPari.user_a_id!=serviceProvider.loginUser.id_db?Text("Adverse".toUpperCase(),style: TextStyle(color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),):   Text("Vous".toUpperCase(),style: TextStyle(color: Colors.green,fontWeight: FontWeight.w600,fontSize: 15),),
+
                       Text("Equipes A",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
 
                       Padding(
@@ -101,6 +103,8 @@ class _MyListMatchState extends State<MyListMatch> {
                   ),
                   Column(
                     children: [
+                      matchPari.user_b_id!=serviceProvider.loginUser.id_db?Text("Adverse".toUpperCase(),style: TextStyle(color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),):   Text("Vous".toUpperCase(),style: TextStyle(color: Colors.green,fontWeight: FontWeight.w600,fontSize: 15),),
+
                       Text("Equipes B",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
 
                       Padding(

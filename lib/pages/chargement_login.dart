@@ -43,7 +43,7 @@ class _ChargementState extends State<SplahsChargement> {
 
       }else{
         print("token: existe");
-        await    serviceProvider.getUserById(token!,context).then((value) async {
+        await    serviceProvider.getChargementUserById(token!,context).then((value) async {
 
         },);
       }

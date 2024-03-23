@@ -27,7 +27,7 @@ class _PariEnCoursState extends State<UserHistoriquePari> {
   Provider.of<ServiceProvider>(context, listen: false);
   late EquipeProvider equipeProvider =
   Provider.of<EquipeProvider>(context, listen: false);
-  String formatDateMatch = "dd MMM yyyy";
+  String formatDateMatch = "dd/MM/yyyy HH:mm";
   bool onTap=false;
   bool is_all=true;
   bool is_story=false;

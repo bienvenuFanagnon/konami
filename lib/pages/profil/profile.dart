@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:konami_bet/pages/history.dart';
 import 'package:konami_bet/pages/profil/pari/user_pari.dart';
+import 'package:konami_bet/pages/profil/wallet/homeWallet.dart';
 
 import 'package:provider/provider.dart';
 
@@ -89,6 +90,7 @@ class _ProfilState extends State<Profil> {
                     backgroundColor: Color(0xFFF5F6F9),
                   ),
                   onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
                     // Navigator.pushNamed(context, "/subscription");
 
 
@@ -99,13 +101,14 @@ class _ProfilState extends State<Profil> {
                     children: [
                       Icon(MaterialIcons.account_balance_wallet,size: 22,color: Colors.green,),
                       SizedBox(width: 20),
-                      Expanded(child: Text("Dépôt",style: TextStyle(color: Colors.black),)),
+                      Expanded(child: Text("Mon Compte",style: TextStyle(color: Colors.black),)),
                       Icon(Icons.arrow_forward_ios),
                     ],
                   ),
                 ),
               ),
             ),
+            /*
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Container(
@@ -137,6 +140,8 @@ class _ProfilState extends State<Profil> {
                 ),
               ),
             ),
+
+             */
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Container(

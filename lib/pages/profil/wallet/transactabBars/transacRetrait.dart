@@ -2,21 +2,24 @@
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:konami_bet/models/soccers_models.dart';
 import 'package:provider/provider.dart';
 import 'package:pulp_flash/pulp_flash.dart';
+
 import '../../../../providers/equipe_provider.dart';
 import '../../../../providers/providers.dart';
 
-class PariPerdu extends StatefulWidget {
-  const PariPerdu({super.key});
+
+class TransactionRetrait extends StatefulWidget {
+  const TransactionRetrait({super.key});
 
   @override
-  State<PariPerdu> createState() => _AllPariState();
+  State<TransactionRetrait> createState() => _AllPariState();
 }
 
-class _AllPariState extends State<PariPerdu> {
+class _AllPariState extends State<TransactionRetrait> {
   late ServiceProvider serviceProvider =
   Provider.of<ServiceProvider>(context, listen: false);
 
@@ -35,14 +38,16 @@ class _AllPariState extends State<PariPerdu> {
     return DateFormat(formatDateMatch).format(date);
   }
 
-  Widget item(Pari pari,double width,double height){
+
+
+  Widget item(TransactionData trans,double width,double height){
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Card(
         borderOnForeground: true, // Cette ligne est facultative, elle indique si la bordure doit être dessinée devant ou derrière l'enfant de la carte
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            color: pari.resultStatus==PariResultStatus.GAGNER.name?Colors.green:pari.resultStatus==PariResultStatus.NAN.name?Colors.grey: Colors.red,// Remplacez Colors.red par la couleur de votre choix
+            color: trans.status==TransactionStatus.VALIDER.name?Colors.green:trans.status==TransactionStatus.ENCOURS.name?Colors.grey: Colors.red,// Remplacez Colors.red par la couleur de votre choix
             width: 2.0, // Définissez l'épaisseur de la bordure selon vos besoins
           ),
           borderRadius: BorderRadius.circular(15.0), // Définissez le rayon de la bordure de la carte selon vos besoins
@@ -58,63 +63,44 @@ class _AllPariState extends State<PariPerdu> {
                   Padding(
                     padding: const EdgeInsets.only(left: 5.0),
                     child: Icon(
-                      Icons.sports_soccer,
+                      FontAwesome.money,
                       color: Colors.green,
                       size: 20,
                     ),
                   ),
                   // SizedBox(width: width*0.3,),
-                  Text("${formaterDateMatch(DateTime.fromMillisecondsSinceEpoch(pari.createdAt!))}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
+                  Text("${formaterDateMatch(DateTime.fromMillisecondsSinceEpoch(trans.createdAt!))}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
 
 
-
-                  Icon(pari.status==PariStatus.DISPONIBLE.name?Icons.lock_open_outlined:Icons.lock,color:pari.status==PariStatus.DISPONIBLE.name?Colors.green: Colors.red,)
+                  Container()
 
                 ],
               ),
-              Text("${pari.resultStatus}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      for(Equipe eq in pari.teams!)
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Container(
+                  Text("${trans.montant} XOF",style: TextStyle(color: Colors.green,fontWeight: FontWeight.w600,fontSize: 20),),
 
-                              child: Image.network("${eq.logo!}",fit: BoxFit.cover,),
-                              width: 30,
-                              height: 30,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
                   Container(
                       alignment: Alignment.center,
                       height: 40,
                       width: 80,
                       decoration: BoxDecoration(
-                          color: pari.resultStatus==PariResultStatus.GAGNER.name?Colors.green:pari.resultStatus==PariResultStatus.NAN.name?Colors.grey: Colors.red,
+                          color: trans.status==TransactionStatus.VALIDER.name?Colors.green:trans.status==TransactionStatus.ENCOURS.name?Colors.grey: Colors.red,// Remplacez Colors.red par la couleur de votre choix
                           borderRadius: BorderRadius.all(Radius.circular(10))
                       ),
                       child:  Container(
 
 
-                          child: Text(pari.resultStatus==PariResultStatus.GAGNER.name?"Gagné":pari.resultStatus==PariResultStatus.NAN.name?"Encours":"Perdu",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w900,fontSize: 15),))
+                        child: Text("${trans.status==TransactionStatus.VALIDER.name?"Validée":trans.status==TransactionStatus.ANNULER.name?"Annulée":"Encours"}",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 12),),
+                      )
 
                   )
                 ],
               ),
-              SizedBox(width: width*0.3,),
-              Card(child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("${pari.montant} Fcfa",style: TextStyle(color: Colors.green,fontWeight: FontWeight.w900,fontSize: 15),),
-              )),
+
+
             ],
           ),
         ),
@@ -127,23 +113,23 @@ class _AllPariState extends State<PariPerdu> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Center(
-      child: StreamBuilder<List<Pari>>(
-          stream: equipeProvider.getUserPariResultStatus(serviceProvider.loginUser.id_db!,PariResultStatus.PERDU.name),
+      child: StreamBuilder<List<TransactionData>>(
+          stream: equipeProvider.getUserTransactionRetrait(serviceProvider.loginUser.id_db!),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
 
             if (snapshot.hasData) {
-              List<Pari> paries =snapshot.data;
+              List<TransactionData> transactions =snapshot.data;
               return SizedBox(
                 height: height*0.76,
                 width: width,                                    //    height: height*0.5,
                 //   width: width,
                 child: ListView.builder(
 
-                  itemCount: paries.length,
+                  itemCount: transactions.length,
                   itemBuilder: (BuildContext context,
                       int index) {
-                    Pari pari = snapshot.data[index];
-                    return item(pari, width, height);
+                    TransactionData transactionData = snapshot.data[index];
+                    return item(transactionData, width, height);
                   },),
               );
             } else if (snapshot.hasError) {

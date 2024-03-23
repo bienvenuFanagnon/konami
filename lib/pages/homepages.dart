@@ -159,15 +159,28 @@ class _HomePageState extends State<HomePage> {
                                   size: 20,
                                   color: Colors.yellow,
                                 ),
-                                Center(
-                                  child: Text(
-                                    ' ${serviceProvider.loginUser.montant} XOF',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
+                                StreamBuilder<Utilisateur>(
+                                    stream: serviceProvider.getOnLyStreamUser(serviceProvider.loginUser.id_db!),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot snapshot) {
+                                      if (snapshot.hasData) {
+                                        Utilisateur user=snapshot.data;
+                                        return Center(
+                                          child: Text(
+                                            ' ${user.montant} XOF',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return Icon(Icons.error_outline);
+                                      } else {
+                                        return CircularProgressIndicator();
+                                      }
+                                    })
+
                               ],
                             ),
                           ),

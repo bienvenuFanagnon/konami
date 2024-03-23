@@ -103,6 +103,52 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver  
       ),
     );
   }
+  void _showBottomSheet(double width) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          width: width,
+          //height: 200,
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'Votre solde est insuffisant.',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.account_balance_wallet,color: Colors.black,),
+                      SizedBox(width: 5,),
+                      const Text('Recharger',style: TextStyle(color: Colors.white),),
+                    ],
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
   Widget myItem(Pari pari,double width,double height){
     return Padding(
       padding: const EdgeInsets.all(4.0),
@@ -538,93 +584,130 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver  
                         onTap=true;
                       });
 
-                      equipeProvider.getOnlyPari(widget.pari.id!).then((value) async {
-                        if (value.status!=PariStatus.PARIER.name) {
-                          try{
-                            String id = FirebaseFirestore.instance
-                                .collection('PariEnCours')
-                                .doc()
-                                .id;
-                            //  Pari pari=Pari();
-                            monPari.id=id;
-                            monPari.score=0;
-                            monPari.resultStatus=PariResultStatus.NAN.name;
 
-                            monPari.status=PariStatus.PARIER.name;
-                            for(Equipe eq in monPari.teams!){
-                              monPari.teams_id!.add(eq.id!);
+                      try{
+                        await serviceProvider.getUserByIdContente(serviceProvider.loginUser.id_db!, context).then((value) async {
+                          if (value) {
+                            if (serviceProvider.loginUser.montant>0&&serviceProvider.loginUser.montant>=monPari.montant!) {
+                              equipeProvider.getOnlyPari(widget.pari.id!).then((value) async {
+                                if (value.status!=PariStatus.PARIER.name) {
+                                  try{
+                                    String id = FirebaseFirestore.instance
+                                        .collection('PariEnCours')
+                                        .doc()
+                                        .id;
+                                    //  Pari pari=Pari();
+                                    monPari.id=id;
+                                    monPari.score=0;
+                                    monPari.resultStatus=PariResultStatus.NAN.name;
+
+                                    monPari.status=PariStatus.PARIER.name;
+                                    for(Equipe eq in monPari.teams!){
+                                      monPari.teams_id!.add(eq.id!);
+                                    }
+                                    //   pari.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
+                                    //   pari.updatedAt= DateTime.now().millisecondsSinceEpoch;
+                                    await FirebaseFirestore.instance.collection('PariEnCours').doc(id).set(monPari.toJson());
+                                    serviceProvider.loginUser.montant=serviceProvider.loginUser.montant-monPari.montant!;
+                                    await  serviceProvider.updateUser(serviceProvider.loginUser, context);
+
+                                    widget.pari.status=PariStatus.PARIER.name;
+                                    await equipeProvider.updatePari(widget.pari, context);
+
+                                    MatchPari match=MatchPari();
+                                    String match_id = FirebaseFirestore.instance
+                                        .collection('PariEnCours')
+                                        .doc()
+                                        .id;
+                                    match.id=match_id;
+                                    match.pari_a=monPari;
+                                    match.pari_a_id=monPari.id;
+                                    match.pari_b=widget.pari;
+                                    match.pari_b_id=widget.pari.id;
+                                    match.user_a_id=serviceProvider.loginUser.id_db!;
+                                    match.user_b_id=widget.pari.user_id;
+                                    match.montant=widget.pari.montant;
+                                    match.status=MatchStatus.ATTENTE.name;
+                                    match.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
+                                    match.updatedAt= DateTime.now().millisecondsSinceEpoch;
+                                    await FirebaseFirestore.instance.collection('Matches').doc(match.id).set(match.toJson());
+
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text(
+                                        "Le pari a été ajouté avec succès",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(color: Colors.green),
+                                      ),
+                                    );
+                                    // equipeProvider.teams_selected=[];
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                    setState(() {
+                                      onTap=false;
+                                    });
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MatchLive(match: match,),));
+
+
+                                  }catch(e){
+                                    setState(() {
+                                      onTap=false;
+                                    });
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text(
+                                        "Désolé, une erreur s'est produite. Veuillez vérifier votre connexion et réessayer ",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+
+                                  }
+                                }else{
+                                  setState(() {
+                                    onTap=false;
+                                  });
+                                  SnackBar snackBar = SnackBar(
+                                    content: Text(
+                                      "pari non disponible",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  );
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
+                                }
+
+                              });
                             }
-                            //   pari.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
-                            //   pari.updatedAt= DateTime.now().millisecondsSinceEpoch;
-                            await FirebaseFirestore.instance.collection('PariEnCours').doc(id).set(monPari.toJson());
-                            widget.pari.status=PariStatus.PARIER.name;
-                            await equipeProvider.updatePari(widget.pari, context);
+                            else{
+                              _showBottomSheet(width);
 
-                            MatchPari match=MatchPari();
-                            String match_id = FirebaseFirestore.instance
-                                .collection('PariEnCours')
-                                .doc()
-                                .id;
-                            match.id=match_id;
-                            match.pari_a=monPari;
-                            match.pari_a_id=monPari.id;
-                            match.pari_b=widget.pari;
-                            match.pari_b_id=widget.pari.id;
-                            match.user_a_id=serviceProvider.loginUser.id_db!;
-                            match.user_b_id=widget.pari.user_id;
-                            match.montant=widget.pari.montant;
-                            match.status=MatchStatus.ATTENTE.name;
-                            match.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
-                            match.updatedAt= DateTime.now().millisecondsSinceEpoch;
-                            await FirebaseFirestore.instance.collection('Matches').doc(match.id).set(match.toJson());
+                            }//sold in
 
-                            SnackBar snackBar = SnackBar(
-                              content: Text(
-                                "Le pari a été ajouté avec succès",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.green),
-                              ),
-                            );
-                            // equipeProvider.teams_selected=[];
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            setState(() {
-                              onTap=false;
-                            });
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MatchLive(match: match,),));
-
-
-                          }catch(e){
-                            setState(() {
-                              onTap=false;
-                            });
-                            SnackBar snackBar = SnackBar(
-                              content: Text(
-                                "Désolé, une erreur s'est produite. Veuillez vérifier votre connexion et réessayer ",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                          }  else{
 
                           }
-                        }else{
-                          setState(() {
-                            onTap=false;
-                          });
-                          SnackBar snackBar = SnackBar(
-                            content: Text(
-                              "pari non disponible",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          );
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(snackBar);
-                        }
+                        },);
 
-                      });
+
+
+                      }catch(e){
+                        print("erreur update post : ${e}");
+                        setState(() {
+                          onTap=false;
+                        });
+                        SnackBar snackBar = SnackBar(
+                          content: Text(
+                            "erreur",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        );
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(snackBar);
+                      }
+
 
 
                     }  else{

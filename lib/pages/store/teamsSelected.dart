@@ -60,6 +60,52 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
     return size;
   }
 
+  void _showBottomSheet(double width) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          width: width,
+          //height: 200,
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'Votre solde est insuffisant.',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.account_balance_wallet,color: Colors.black,),
+                      SizedBox(width: 5,),
+                      const Text('Recharger',style: TextStyle(color: Colors.white),),
+                    ],
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
   final _formKey = GlobalKey<FormState>();
 
   late Pari x_pari=Pari();
@@ -225,35 +271,72 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                       setState(() {
                         onTap=true;
                       });
-                      String id = FirebaseFirestore.instance
-                          .collection('PariEnCours')
-                          .doc()
-                          .id;
-                      Pari pari=Pari();
-                      pari.id=id;
-                      pari.score=0;
-                      pari.resultStatus=PariResultStatus.NAN.name;
-                      pari.teams=[];
-                      pari.montant=double.parse(montantController.text);
-                      pari.user_id=serviceProvider.loginUser.id_db!;
-                      pari.status=PariStatus.DISPONIBLE.name;
-                      for(Equipe eq in equipeProvider.teams_selected){
-                        pari.teams_id!.add(eq.id!);
+
+                      try{
+                        await serviceProvider.getUserByIdContente(serviceProvider.loginUser.id_db!, context).then((value) async {
+                          if (value) {
+                            if (serviceProvider.loginUser.montant>0&&serviceProvider.loginUser.montant>=double.parse(montantController.text)) {
+                              String id = FirebaseFirestore.instance
+                                  .collection('PariEnCours')
+                                  .doc()
+                                  .id;
+                              Pari pari=Pari();
+                              pari.id=id;
+                              pari.score=0;
+                              pari.resultStatus=PariResultStatus.NAN.name;
+                              pari.teams=[];
+                              pari.montant=double.parse(montantController.text);
+                              pari.user_id=serviceProvider.loginUser.id_db!;
+                              pari.status=PariStatus.DISPONIBLE.name;
+                              for(Equipe eq in equipeProvider.teams_selected){
+                                pari.teams_id!.add(eq.id!);
+                              }
+                              pari.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
+                              pari.updatedAt= DateTime.now().millisecondsSinceEpoch;
+                              await FirebaseFirestore.instance.collection('PariEnCours').doc(id).set(pari.toJson());
+                              serviceProvider.loginUser.montant=serviceProvider.loginUser.montant-double.parse(montantController.text);
+                              await  serviceProvider.updateUser(serviceProvider.loginUser, context);
+
+                              equipeProvider.teams_selected=[];
+                              montantController.text="";
+                              SnackBar snackBar = SnackBar(
+                                content: Text(
+                                  "Le pari a été créé avec succès, veuillez le voir votre liste des paris en cours.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.green),
+                                ),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            }
+                            else{
+                              _showBottomSheet(width);
+
+                            }//sold in
+
+                          }  else{
+
+                          }
+                        },);
+
+
+
+                      }catch(e){
+                        print("erreur update post : ${e}");
+                        setState(() {
+                          onTap=false;
+                        });
+                        SnackBar snackBar = SnackBar(
+                          content: Text(
+                            "erreur",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        );
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(snackBar);
                       }
-                      pari.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
-                      pari.updatedAt= DateTime.now().millisecondsSinceEpoch;
-                      await FirebaseFirestore.instance.collection('PariEnCours').doc(id).set(pari.toJson());
-                      SnackBar snackBar = SnackBar(
-                        content: Text(
-                          "Le pari a été créé avec succès, veuillez le voir dans la liste des paris en cours.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.green),
-                        ),
-                      );
-                      equipeProvider.teams_selected=[];
-                      montantController.text="";
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(snackBar);
+
                       setState(() {
                         onTap=false;
                       });
