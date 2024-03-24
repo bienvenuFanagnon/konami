@@ -6,6 +6,9 @@ import 'package:konami_bet/pages/auth/registration.dart';
 import 'package:konami_bet/services/database.dart';
 import 'package:konami_bet/services/soccer_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
+
+import 'equipe_provider.dart';
 
 
 
@@ -19,6 +22,8 @@ late PariService pariService = PariService();
 late Utilisateur loginUser=Utilisateur();
 late Utilisateur matchUser=Utilisateur();
 late Utilisateur userVerify =Utilisateur();
+final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
 late UtilisateurService utilisateurService = UtilisateurService();
 late String? token = '';
 Future<void> storeIsFirst(bool value) async {
@@ -46,28 +51,31 @@ Future<String?> getToken() async {
   //notifyListeners();
   return prefs.getString('token');
 }
+Future<bool?> deleteToken() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  // print("get token : ${token}");
+  //notifyListeners();
+  return prefs.remove('token');
+}
 
   creerPari(Pari pari){
   pariService.create(pari);
   notifyListeners();
   }
   
-  createUser(String nom, pays,String code,String id,String phone,BuildContext context) async {
+  Future<bool> createUser( Utilisateur u,String id,BuildContext context) async {
  try{
-   Utilisateur u= Utilisateur();
-   u.phoneNumber=phone;
-   u.id_db=id;
-   u.nom=nom;
-   u.codeSecurity=code;
-   u.pays=pays;
+
 
    print("error1");
    await utilisateurService.create(u, id);
    print("error2");
    getChargementUserById(id,context);
   // Navigator.pushNamed(context, 'phone');
+   return true;
+
  }catch(e){
-   Fluttertoast.showToast(msg: 'erreur ${e.toString()}');
+   return false;
    print(e.toString());
  }
 
@@ -87,10 +95,10 @@ getUserById(String id,String phone,BuildContext context) async {
     storeToken( loginUser!.id_db!);
 
 
-    Navigator.pushNamed(context, '/');
+    Navigator.pushReplacementNamed(context, '/');
     // notifyListeners();
   }else{
-    Navigator.push(context, CupertinoDialogRoute(builder: (context) => RegistrationPage(user_id: id, phone: phone,), context: context));
+    Navigator.pushReplacement(context, CupertinoDialogRoute(builder: (context) => RegistrationPage(user_id: id, phone: phone,), context: context));
 
     //Navigator.pushNamed(context, 'register');
   }
@@ -114,26 +122,123 @@ Future<Utilisateur> getMatchUserById(String id,BuildContext context) async {
   }
 getChargementUserById(String id,BuildContext context) async {
   List<Utilisateur> listu=[];
+  try{
+    listu=await utilisateurService.getUserById(id);
+    if(listu.isNotEmpty){
+      this.loginUser=Utilisateur();
+      this.loginUser=listu[0];
+      print("user data providers");
+      print("user data : ${this.loginUser.toJson()}");
+      print( this.loginUser.id_db);
+      storeToken( loginUser!.id_db!);
 
-  listu=await utilisateurService.getUserById(id);
-  if(listu.isNotEmpty){
-    this.loginUser=Utilisateur();
-     this.loginUser=listu[0];
-    print("user data providers");
-    print("user data : ${this.loginUser.toJson()}");
-    print( this.loginUser.id_db);
-   storeToken( loginUser!.id_db!);
 
+      Navigator.pushNamed(context, '/');
+      // notifyListeners();
+    }else{
+      //  Navigator.push(context, CupertinoDialogRoute(builder: (context) => RegistrationPage(user_id: id,), context: context));
 
-    Navigator.pushNamed(context, '/');
-     // notifyListeners();
-  }else{
-  //  Navigator.push(context, CupertinoDialogRoute(builder: (context) => RegistrationPage(user_id: id,), context: context));
-
+      Navigator.pushNamed(context, 'phone');
+    }
+  }catch(e){
     Navigator.pushNamed(context, 'phone');
+
   }
+
+
 //  notifyListeners();
   }
+Future<bool> getUserByCodeParrain(String codeParrain,BuildContext context) async {
+  List<Utilisateur> listu=[];
+  Utilisateur userParrain=Utilisateur();
+  try{
+    listu=await utilisateurService.getUserByPseudoCode(codeParrain);
+    if(listu.isNotEmpty){
+
+      userParrain=listu[0];
+      print("user data providers");
+      print("user parrain data : ${this.loginUser.toJson()}");
+      userParrain.nombre_parrainage=userParrain.nombre_parrainage!+1;
+
+      updateUser(userParrain, context);
+
+      return true;
+
+      // notifyListeners();
+    }else{
+      //  Navigator.push(context, CupertinoDialogRoute(builder: (context) => RegistrationPage(user_id: id,), context: context));
+      return false;
+
+    }
+  }catch(e){
+    return false;
+
+  }
+
+
+//  notifyListeners();
+  }
+
+
+Future<bool> getUserAndOperation(String codeParrain,BuildContext context) async {
+  print("user parrain code : ${codeParrain}");
+
+  late EquipeProvider equipeProvider =
+  Provider.of<EquipeProvider>(context, listen: false);
+  List<Utilisateur> listu=[];
+  Utilisateur userParrain=Utilisateur();
+  try{
+    listu=await utilisateurService.getUserByPseudoCode(codeParrain);
+    if(listu.isNotEmpty){
+
+      userParrain=listu[0];
+      print("user data providers");
+      print("user parrain data : ${userParrain.toJson()}");
+      if ( userParrain.nombre_parrainage!>19) {
+       if (userParrain.is_partenaire!) {
+         userParrain.nombre_pari_parrainage=userParrain.nombre_pari_parrainage!+1;
+         if (userParrain.nombre_pari_parrainage!>99) {
+           userParrain.montant_compte_parrain=userParrain.montant_compte_parrain!+2000;
+           userParrain.nombre_pari_parrainage=0;
+           TransactionData transaction = TransactionData(// Pending, validated, or rejected
+           );
+           //transaction.id="";
+           transaction.user_id= userParrain.id_db!;
+           transaction.type=TypeTransaction.DEPOT.name;
+           transaction.depotType=TypeTranDepot.INTERNE.name;
+           transaction.type_compte=TypeCompte.PARTENAIRE.name;
+
+           transaction.montant=2000;
+           transaction.status=TransactionStatus.VALIDER.name;
+           transaction.createdAt=DateTime.now().millisecondsSinceEpoch;
+           transaction.updatedAt=DateTime.now().millisecondsSinceEpoch;
+           await  equipeProvider.createTransaction(transaction);
+
+         }
+       }
+
+
+      }
+
+      updateUser(userParrain, context);
+
+      return true;
+
+      // notifyListeners();
+    }else{
+      //  Navigator.push(context, CupertinoDialogRoute(builder: (context) => RegistrationPage(user_id: id,), context: context));
+      return false;
+
+    }
+  }catch(e){
+    return false;
+
+  }
+
+
+//  notifyListeners();
+}
+
 Future<bool>  getUserByIdContente(String id,BuildContext context) async {
   List<Utilisateur> listu=[];
 
@@ -274,11 +379,161 @@ creatAllMatchByApi() async {
       */
     notifyListeners();
   }
+Future<Pari> getOnlyPari(String id) async {
+  //await getAppData();
+  late List<Pari> list= [];
 
-  updateNomberOfVerication(){
+  CollectionReference collectionRef =
+  FirebaseFirestore.instance.collection('PariEnCours');
+  // Get docs from collection reference
+  QuerySnapshot querySnapshot = await collectionRef.where("id",isEqualTo: id!).get()
+      .then((value){
 
-  notifyListeners();
+    print(value);
+    return value;
+  }).catchError((onError){
+
+  });
+
+  // Get data from docs and convert map to List
+  list = querySnapshot.docs.map((doc) =>
+      Pari.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+
+
+  return list.first;
+
+}
+Future<bool>  checkPseudo(String id,BuildContext context) async {
+  late List<Pseudo> list= [];
+try{
+
+  CollectionReference collectionRef =
+  FirebaseFirestore.instance.collection('Pseudos');
+  // Get docs from collection reference
+  QuerySnapshot querySnapshot = await collectionRef.where("nom",isEqualTo: id!).get()
+      .then((value){
+
+    print(value);
+    return value;
+  });
+
+  // Get data from docs and convert map to List
+  list = querySnapshot.docs.map((doc) =>
+      Pseudo.fromJson(doc.data() as Map<String, dynamic>)).toList();
+  if(list.isNotEmpty){
+
+    return true;
+    // notifyListeners();
+  }else{
+    return false;
   }
+
+}catch(e){
+  return false;
+}
+//  notifyListeners();
+}
+
+Future<bool> createPseudo(Pseudo data) async {
+  String id = firestore
+      .collection('Pseudos')
+      .doc()
+      .id;
+  data.id=id;
+  bool status=false;
+
+  try{
+    final DocumentReference<Map<String, dynamic>> docRef = FirebaseFirestore.instance.collection('Pseudos').doc(id);
+    docRef.set(data.toJson());
+
+
+    //  await firestore.collection('Matches').doc(id).set(data.toJson());
+    print("///////////-- SAVE pseudo --///////////////");
+    return true;
+  } on FirebaseException catch(error){
+    return false;
+
+  }
+}
+
+Future<bool> createAppData(AppData data) async {
+  String id = firestore
+      .collection('AppData')
+      .doc()
+      .id;
+  data.id=id;
+  bool status=false;
+
+  try{
+    final DocumentReference<Map<String, dynamic>> docRef = FirebaseFirestore.instance.collection('AppData').doc(id);
+    docRef.set(data.toJson());
+
+
+    //  await firestore.collection('Matches').doc(id).set(data.toJson());
+    print("///////////-- SAVE appdata --///////////////");
+    return true;
+  } on FirebaseException catch(error){
+    return false;
+
+  }
+}
+Future<List<AppData>>  getAppData() async {
+  late List<AppData> list= [];
+  try{
+
+    CollectionReference collectionRef =
+    FirebaseFirestore.instance.collection('AppData');
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await collectionRef.get()
+        .then((value){
+
+      print(value);
+      return value;
+    });
+
+    // Get data from docs and convert map to List
+    list = querySnapshot.docs.map((doc) =>
+        AppData.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    if(list.isNotEmpty){
+
+      return list;
+      // notifyListeners();
+    }else{
+      AppData appData=AppData();
+      appData.nombre_parrainage=20;
+      appData.adminSolde=0.0;
+      appData.soldeTotal=0.0;
+      createAppData(appData);
+
+
+      return [];
+    }
+
+  }catch(e){
+    return [];
+  }
+//  notifyListeners();
+}
+
+Future<bool> updateAppData(AppData data,BuildContext context) async {
+  try{
+
+
+
+    await FirebaseFirestore.instance
+        .collection('AppData')
+        .doc(data.id)
+        .update(data.toJson());
+
+    return true;
+  }catch(e){
+    print("erreur update  : ${e}");
+    return false;
+  }
+}
+
+
   deleteMatchFinished(String id)async{
    matchService.deleteById(id);
   notifyListeners();

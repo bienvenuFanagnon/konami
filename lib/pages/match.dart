@@ -179,6 +179,8 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                                     transaction.user_id= user.id_db!;
                                                     transaction.type=TypeTransaction.DEPOT.name;
                                                     transaction.depotType=TypeTranDepot.INTERNE.name;
+                                                    transaction.type_compte=TypeCompte.PARTICULIER.name;
+
                                                     transaction.montant=gain;
                                                     transaction.status=TransactionStatus.VALIDER.name;
                                                     transaction.createdAt=DateTime.now().millisecondsSinceEpoch;
@@ -203,6 +205,8 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                                     transaction.user_id= user.id_db!;
                                                     transaction.type=TypeTransaction.DEPOT.name;
                                                     transaction.depotType=TypeTranDepot.INTERNE.name;
+                                                    transaction.type_compte=TypeCompte.PARTICULIER.name;
+
                                                     transaction.montant=gain;
                                                     transaction.status=TransactionStatus.VALIDER.name;
                                                     transaction.createdAt=DateTime.now().millisecondsSinceEpoch;
@@ -212,9 +216,21 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                                   match.pari_a!.resultStatus=PariResultStatus.PERDU.name;
                                                   match.pari_b!.resultStatus=PariResultStatus.GAGNER.name;
                                                 }
+
+
                                                 await equipeProvider.updatePari( match.pari_a!, context);
                                                 await equipeProvider.updatePari( match.pari_b!, context);
                                                 await equipeProvider.updateMatch( match, context);
+
+                                                await serviceProvider.getUserAndOperation(match.user_a!.code_user_parrainage!.toLowerCase(), context);
+                                                await serviceProvider.getUserAndOperation(match.user_b!.code_user_parrainage!.toLowerCase(), context);
+                                                await serviceProvider.getAppData().then((appdatas) async {
+                                                  if (appdatas.isNotEmpty) {
+                                                    appdatas.first.adminSolde= appdatas.first.adminSolde+0.1*(match.montant!*2);
+                                                    await serviceProvider.updateAppData(appdatas.first, context);
+                                                  }
+
+                                                },);
                                               }  else{
 
                                                // print("match non disponible : ${value.status}");

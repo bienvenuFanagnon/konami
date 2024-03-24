@@ -149,28 +149,6 @@ class MiseAJourMatchesService {
   }
 
 
-  Future<List<MiseAJourMatches>> getAllMatches() async {
-    late List<MiseAJourMatches> list= [];
-
-
-    CollectionReference collectionRef =
-    FirebaseFirestore.instance.collection('MiseAJourMatches');
-    // Get docs from collection reference
-    QuerySnapshot querySnapshot = await collectionRef.get()
-        .then((value){
-
-      return value;
-    }).catchError((onError){
-
-    });
-
-    // Get data from docs and convert map to List
-    list = querySnapshot.docs.map((doc) =>
-        MiseAJourMatches.fromJson(doc.data() as Map<String, dynamic>)).toList();
-
-    return list;
-
-  }
 
 
 }
@@ -403,6 +381,30 @@ class UtilisateurService {
       print("Utilisateur");
       print(value);
       return value;
+    }).catchError((onError){
+
+    });
+
+    // Get data from docs and convert map to List
+    list = querySnapshot.docs.map((doc) =>
+        Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+
+    return list;
+
+  }
+  Future<List<Utilisateur>> getUserByPseudoCode(String codepseudo) async {
+    late List<Utilisateur> list= [];
+
+
+    CollectionReference collectionRef =
+    FirebaseFirestore.instance.collection('Utilisateur');
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await collectionRef.where("code_parrain",isEqualTo: codepseudo!).get()
+        .then((value){
+      print("code parrain Utilisateur");
+
+ print(value);      return value;
     }).catchError((onError){
 
     });

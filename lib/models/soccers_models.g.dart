@@ -17,22 +17,77 @@ Map<String, dynamic> _$EquipeToJson(Equipe instance) => <String, dynamic>{
       'logo': instance.logo,
     };
 
-Utilisateur _$UtilisateurFromJson(Map<String, dynamic> json) => Utilisateur()
-  ..id_db = json['id_db'] as String?
-  ..nom = json['nom'] as String?
-  ..codeSecurity = json['codeSecurity'] as String?
-  ..phoneNumber = json['phoneNumber'] as String?
-  ..pays = json['pays'] as String?
-  ..montant = (json['montant'] as num).toDouble();
+AppData _$AppDataFromJson(Map<String, dynamic> json) => AppData()
+  ..id = json['id'] as String
+  ..soldeTotal = (json['soldeTotal'] as num).toDouble()
+  ..adminSolde = (json['adminSolde'] as num).toDouble()
+  ..nombre_parrainage = json['nombre_parrainage'] as int;
+
+Map<String, dynamic> _$AppDataToJson(AppData instance) => <String, dynamic>{
+      'id': instance.id,
+      'soldeTotal': instance.soldeTotal,
+      'adminSolde': instance.adminSolde,
+      'nombre_parrainage': instance.nombre_parrainage,
+    };
+
+Utilisateur _$UtilisateurFromJson(Map<String, dynamic> json) => Utilisateur(
+      id_db: json['id_db'] as String? ?? "",
+      pseudo: json['pseudo'] as String? ?? "",
+      nom: json['nom'] as String? ?? "",
+      photo: json['photo'] as String? ?? "",
+      carte_identite: json['carte_identite'] as String? ?? "",
+      demande_partenaire: json['demande_partenaire'] as String? ?? "",
+      numero_carte_identite: json['numero_carte_identite'] as String? ?? "",
+      code_parrain: json['code_parrain'] as String? ?? "",
+      code_user_parrainage: json['code_user_parrainage'] as String? ?? "",
+      prenom: json['prenom'] as String? ?? "",
+      codePinSecurity: json['codePinSecurity'] as String? ?? "",
+      haveCodeSecurity: json['haveCodeSecurity'] as bool? ?? false,
+      is_valide: json['is_valide'] as bool? ?? false,
+      is_blocked: json['is_blocked'] as bool? ?? false,
+      is_partenaire: json['is_partenaire'] as bool? ?? false,
+      phoneNumber: json['phoneNumber'] as String? ?? "",
+      nombre_retrait: json['nombre_retrait'] as int? ?? 0,
+      nombre_depot: json['nombre_depot'] as int? ?? 0,
+      nombre_parrainage: json['nombre_parrainage'] as int? ?? 0,
+      nombre_pari_parrainage: json['nombre_pari_parrainage'] as int? ?? 0,
+      pays: json['pays'] as String? ?? "",
+      region: json['region'] as String? ?? "",
+      ville: json['ville'] as String? ?? "",
+      role: json['role'] as String? ?? "",
+      montant: (json['montant'] as num?)?.toDouble() ?? 0,
+      montant_compte_parrain:
+          (json['montant_compte_parrain'] as num?)?.toDouble() ?? 0,
+    );
 
 Map<String, dynamic> _$UtilisateurToJson(Utilisateur instance) =>
     <String, dynamic>{
       'id_db': instance.id_db,
+      'pseudo': instance.pseudo,
       'nom': instance.nom,
-      'codeSecurity': instance.codeSecurity,
+      'photo': instance.photo,
+      'carte_identite': instance.carte_identite,
+      'numero_carte_identite': instance.numero_carte_identite,
+      'code_parrain': instance.code_parrain,
+      'code_user_parrainage': instance.code_user_parrainage,
+      'prenom': instance.prenom,
+      'codePinSecurity': instance.codePinSecurity,
+      'haveCodeSecurity': instance.haveCodeSecurity,
+      'is_valide': instance.is_valide,
+      'is_blocked': instance.is_blocked,
+      'is_partenaire': instance.is_partenaire,
       'phoneNumber': instance.phoneNumber,
+      'demande_partenaire': instance.demande_partenaire,
+      'nombre_retrait': instance.nombre_retrait,
+      'nombre_depot': instance.nombre_depot,
+      'nombre_parrainage': instance.nombre_parrainage,
+      'nombre_pari_parrainage': instance.nombre_pari_parrainage,
       'pays': instance.pays,
+      'region': instance.region,
+      'ville': instance.ville,
+      'role': instance.role,
       'montant': instance.montant,
+      'montant_compte_parrain': instance.montant_compte_parrain,
     };
 
 TransactionData _$TransactionDataFromJson(Map<String, dynamic> json) =>
@@ -40,6 +95,7 @@ TransactionData _$TransactionDataFromJson(Map<String, dynamic> json) =>
       ..id = json['id'] as String
       ..user_id = json['user_id'] as String
       ..type = json['type'] as String
+      ..type_compte = json['type_compte'] as String
       ..depotType = json['depotType'] as String
       ..montant = (json['montant'] as num).toDouble()
       ..createdAt = json['createdAt'] as int?
@@ -51,6 +107,7 @@ Map<String, dynamic> _$TransactionDataToJson(TransactionData instance) =>
       'id': instance.id,
       'user_id': instance.user_id,
       'type': instance.type,
+      'type_compte': instance.type_compte,
       'depotType': instance.depotType,
       'montant': instance.montant,
       'createdAt': instance.createdAt,
@@ -108,13 +165,11 @@ Map<String, dynamic> _$MatchPariToJson(MatchPari instance) => <String, dynamic>{
       'pari_id': instance.pari_id,
     };
 
-MiseAJourMatches _$MiseAJourMatchesFromJson(Map<String, dynamic> json) =>
-    MiseAJourMatches()
-      ..id_db = json['id_db'] as String?
-      ..nombre = json['nombre'] as int?;
+Pseudo _$PseudoFromJson(Map<String, dynamic> json) => Pseudo()
+  ..id = json['id'] as String?
+  ..nom = json['nom'] as String?;
 
-Map<String, dynamic> _$MiseAJourMatchesToJson(MiseAJourMatches instance) =>
-    <String, dynamic>{
-      'id_db': instance.id_db,
-      'nombre': instance.nombre,
+Map<String, dynamic> _$PseudoToJson(Pseudo instance) => <String, dynamic>{
+      'id': instance.id,
+      'nom': instance.nom,
     };

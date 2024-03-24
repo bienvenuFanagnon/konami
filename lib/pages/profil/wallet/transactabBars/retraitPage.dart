@@ -90,6 +90,8 @@ class _RetraitPageState extends State<RetraitPage> {
                               transaction.user_id= user.id_db!;
                               transaction.type=TypeTransaction.RETRAIT.name;
                               transaction.depotType=TypeTranDepot.EXTERNE.name;
+                              transaction.type_compte=TypeCompte.PARTICULIER.name;
+
                               transaction.montant=double.parse(_montantController.text);
                               transaction.status=TransactionStatus.values[random.nextInt(3)].name;
                               transaction.createdAt=DateTime.now().millisecondsSinceEpoch;

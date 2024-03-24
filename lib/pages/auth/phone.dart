@@ -50,7 +50,9 @@ class _MyPhoneState extends State<MyPhone> {
 
       authWithPhoneNumber(phone, onCodeSend: (verificationId, v) {
       //  onTap = false;
-        setState(() {});
+        setState(() {
+          _isLoading = false;
+        });
         Navigator.of(context).push(MaterialPageRoute(
             builder: (c) => VerificationOtp(
               verificationId: verificationId,

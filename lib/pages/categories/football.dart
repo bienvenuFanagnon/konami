@@ -87,141 +87,143 @@ class _VictoirePageState extends State<FootballPage> {
       appBar: AppBar(
         title: Text('Teams Football'),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('Ajouter des équipes au pari'),
-                  GestureDetector(
-                    onTap: () {
-
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TeamSelectedPage(),
-                          ));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: badges.Badge(
-                        badgeContent: Text(
-                          '${equipeProvider.teams_selected.length}',
-                          style: TextStyle(color: Colors.white),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Ajouter des équipes au pari'),
+                    GestureDetector(
+                      onTap: () {
+        
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TeamSelectedPage(),
+                            ));
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 20.0),
+                        child: badges.Badge(
+                          badgeContent: Text(
+                            '${equipeProvider.teams_selected.length}',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          child: Icon(MaterialCommunityIcons.soccer_field),
                         ),
-                        child: Icon(MaterialCommunityIcons.soccer_field),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              equipeProvider.teams.length < 1
-                  ? Center(
-                      child: Container(
-                          height: 50,
-                          width: 50,
-                          child: CircularProgressIndicator()))
-                  : SingleChildScrollView(
-                      child: SizedBox(
-                        height: height * 0.8,
-                        //  width: 200,
-                        child: ListView.builder(
-                          itemCount: equipeProvider.teams.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            Equipe team = equipeProvider.teams[index];
-                            return Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: Container(
-                                    //width: 200,
-                                    child: ListTile(
-                                        title: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 5.0),
-                                          child: Icon(
-                                            Icons.sports_soccer,
-                                            color: Colors.green,
-                                            size: 20,
-                                          ),
-                                        ),
-                                        subtitle: Text("${team.nom!}"),
-                                        leading: Card(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: Container(
-                                              child: Image.network(
-                                                "${team.logo!}",
-                                                fit: BoxFit.cover,
-                                              ),
-                                              width: 40,
-                                              height: 40,
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                equipeProvider.teams.length < 1
+                    ? Center(
+                        child: Container(
+                            height: 50,
+                            width: 50,
+                            child: CircularProgressIndicator()))
+                    : SingleChildScrollView(
+                        child: SizedBox(
+                          height: height * 0.8,
+                          //  width: 200,
+                          child: ListView.builder(
+                            itemCount: equipeProvider.teams.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              Equipe team = equipeProvider.teams[index];
+                              return Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Container(
+                                      //width: 200,
+                                      child: ListTile(
+                                          title: Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 5.0),
+                                            child: Icon(
+                                              Icons.sports_soccer,
+                                              color: Colors.green,
+                                              size: 20,
                                             ),
                                           ),
-                                        ),
-                                        trailing:isIn( equipeProvider.teams_selected, team.id!)? TextButton(
-                                            onPressed: ()  {
-
-                                              setState(() {
-                                                // teams.add(team);
-                                                equipeProvider.teams_selected.remove(team);
-
-                                                //saveTeams(teams);
-                                              });
-                                              print(
-                                                  "team size : ${teams.length}");
-                                            },
-                                            child: Text(
-                                              "Retirer",
-                                              style: TextStyle(
-                                                  color: Colors.red),
-                                            )):TextButton(
-                                            onPressed: ()  {
-                                           //   await deleteToken();
-                                              setState(() {
-                                               // teams.add(team);
-                                                if (equipeProvider.teams_selected.length>2) {
-                                                  SnackBar snackBar = SnackBar(
-                                                    content: Text(
-                                                      'le nombre maximal est atteint 3',
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(color: Colors.red),
-                                                    ),
-                                                  );
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(snackBar);
-                                                }else{
-                                                  equipeProvider.teams_selected.add(team);
-                                                }
-
-                                                //saveTeams(teams);
-                                              });
-                                              print(
-                                                  "team size : ${teams.length}");
-                                            },
-                                            child: Text(
-                                              "Ajouter",
-                                              style: TextStyle(
-                                                  color: Colors.green),
-                                            ))
+                                          subtitle: Text("${team.nom!}"),
+                                          leading: Card(
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(2.0),
+                                              child: Container(
+                                                child: Image.network(
+                                                  "${team.logo!}",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                width: 40,
+                                                height: 40,
+                                              ),
+                                            ),
+                                          ),
+                                          trailing:isIn( equipeProvider.teams_selected, team.id!)? TextButton(
+                                              onPressed: ()  {
+        
+                                                setState(() {
+                                                  // teams.add(team);
+                                                  equipeProvider.teams_selected.remove(team);
+        
+                                                  //saveTeams(teams);
+                                                });
+                                                print(
+                                                    "team size : ${teams.length}");
+                                              },
+                                              child: Text(
+                                                "Retirer",
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              )):TextButton(
+                                              onPressed: ()  {
+                                             //   await deleteToken();
+                                                setState(() {
+                                                 // teams.add(team);
+                                                  if (equipeProvider.teams_selected.length>2) {
+                                                    SnackBar snackBar = SnackBar(
+                                                      content: Text(
+                                                        'le nombre maximal est atteint 3',
+                                                        textAlign: TextAlign.center,
+                                                        style: TextStyle(color: Colors.red),
+                                                      ),
+                                                    );
+                                                    ScaffoldMessenger.of(context)
+                                                        .showSnackBar(snackBar);
+                                                  }else{
+                                                    equipeProvider.teams_selected.add(team);
+                                                  }
+        
+                                                  //saveTeams(teams);
+                                                });
+                                                print(
+                                                    "team size : ${teams.length}");
+                                              },
+                                              child: Text(
+                                                "Ajouter",
+                                                style: TextStyle(
+                                                    color: Colors.green),
+                                              ))
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    )
-            ],
+                      )
+              ],
+            ),
           ),
         ),
       ),

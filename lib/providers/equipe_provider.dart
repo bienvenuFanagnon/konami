@@ -825,6 +825,7 @@ class EquipeProvider extends ChangeNotifier {
     // .where("entreprise_id",isEqualTo:'${entrepriseId}')
 
         .where("type",isEqualTo:'${TypeTransaction.DEPOT.name}')
+        .where("type_compte",isEqualTo:'${TypeCompte.PARTICULIER.name}')
     // .orderBy("status")
         .where( 'user_id', isEqualTo:  user_id! )// Order by status first
         .orderBy("createdAt", descending: true)
@@ -875,6 +876,8 @@ class EquipeProvider extends ChangeNotifier {
     // .where("entreprise_id",isEqualTo:'${entrepriseId}')
 
         .where("type",isEqualTo:'${TypeTransaction.RETRAIT.name}')
+        .where("type_compte",isEqualTo:'${TypeCompte.PARTICULIER.name}')
+
     // .orderBy("status")
         .where( 'user_id', isEqualTo:  user_id! )// Order by status first
         .orderBy("createdAt", descending: true)

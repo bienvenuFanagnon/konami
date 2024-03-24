@@ -35,17 +35,83 @@ class Equipe {
 }
 
 @JsonSerializable()
+class AppData {
+  late String id;
+// "en attente", "validé", "rejeté"
+// "depot" ou "retrait"
+  late double soldeTotal;
+  late double adminSolde;
+late int nombre_parrainage=20;
+
+
+  AppData();
+
+  // Add a factory constructor that creates a new instance from a JSON map
+  factory AppData.fromJson(Map<String, dynamic> json) => _$AppDataFromJson(json);
+
+  // Add a method that converts this instance to a JSON map
+  Map<String, dynamic> toJson() => _$AppDataToJson(this);
+}
+
+@JsonSerializable()
 class Utilisateur {
 
   late String? id_db="";
+  late String? pseudo="";
   late String? nom="";
-  late String? codeSecurity="";
+  late String? photo="";
+  late String? carte_identite="";
+  late String? numero_carte_identite="";
+  late String? code_parrain="";
+  late String? code_user_parrainage="";
+  late String? prenom="";
+  late String? codePinSecurity="";
+  late bool? haveCodeSecurity=false;
+  late bool? is_valide=false;
+  late bool? is_blocked=false;
+  late bool? is_partenaire=false;
   late String? phoneNumber="";
+  late String? demande_partenaire="";
+  late int? nombre_retrait=0;
+  late int? nombre_depot=0;
+  late int? nombre_parrainage=0;
+  late int? nombre_pari_parrainage=0;
   late String? pays="";
+  late String? region="";
+  late String? ville="";
+  late String? role="";
   late double montant=0;
+  late double montant_compte_parrain=0;
 
 
-  Utilisateur();
+  Utilisateur({
+    this.id_db = "",
+    this.pseudo = "",
+    this.nom = "",
+    this.photo = "",
+    this.carte_identite = "",
+    this.demande_partenaire = "",
+    this.numero_carte_identite = "",
+    this.code_parrain = "",
+    this.code_user_parrainage = "",
+    this.prenom = "",
+    this.codePinSecurity = "",
+    this.haveCodeSecurity = false,
+    this.is_valide = false,
+    this.is_blocked = false,
+    this.is_partenaire = false,
+    this.phoneNumber = "",
+    this.nombre_retrait = 0,
+    this.nombre_depot = 0,
+    this.nombre_parrainage = 0,
+    this.nombre_pari_parrainage = 0,
+    this.pays = "",
+    this.region = "",
+    this.ville = "",
+    this.role = "",
+    this.montant = 0,
+    this.montant_compte_parrain = 0,
+  });
 
   // Add a factory constructor that creates a new instance from a JSON map
   factory Utilisateur.fromJson(Map<String, dynamic> json) => _$UtilisateurFromJson(json);
@@ -59,6 +125,7 @@ class TransactionData {
   late String id;
   late String user_id;
   late String type;
+  late String type_compte;
   late String depotType; // "en attente", "validé", "rejeté"
 // "depot" ou "retrait"
   late double montant;
@@ -135,16 +202,16 @@ class MatchPari {
   Map<String, dynamic> toJson() => _$MatchPariToJson(this);
 }
 @JsonSerializable()
-class MiseAJourMatches {
-  late String? id_db="";
-late int? nombre=0;
+class Pseudo {
+  late String? id="";
+  late String? nom="";
 
 
-  MiseAJourMatches();
+  Pseudo();
 
-  factory MiseAJourMatches.fromJson(Map<String, dynamic> json) => _$MiseAJourMatchesFromJson(json);
+  factory Pseudo.fromJson(Map<String, dynamic> json) => _$PseudoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MiseAJourMatchesToJson(this);
+  Map<String, dynamic> toJson() => _$PseudoToJson(this);
 }
 
 enum MatchStatus{
@@ -168,6 +235,13 @@ enum TypeTranDepot{
 enum PariResultStatus{
   GAGNER,PERDU,NAN
 }
-enum ChoixPari{
-  V1,X,V2
+enum TypeCompte{
+  PARTICULIER,PARTENAIRE
+}
+
+enum RoleUser{
+  ADMIN,USER,SUPERADMIN
+}
+enum StatusDemandePartenaire{
+  ACCEPTER,ENCOURS,REFUSER,NAN
 }
