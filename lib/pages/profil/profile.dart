@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../providers/equipe_provider.dart';
 import '../../providers/providers.dart';
+import 'compe_partenaire/comptePartenaire.dart';
 
 
 class Profil extends StatefulWidget {
@@ -99,6 +100,7 @@ class _ProfilState extends State<Profil> {
 
               ],
             ),
+            /*
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Container(
@@ -113,6 +115,8 @@ class _ProfilState extends State<Profil> {
               ),
             ),
 
+
+             */
             SizedBox(height: 20),
 
             Padding(
@@ -163,6 +167,9 @@ class _ProfilState extends State<Profil> {
                   onPressed: () {
                     if (!serviceProvider.loginUser.is_partenaire!) {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => DevenirPartenaire(),));
+
+                    }else{
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ComptePartenaire(),));
 
                     }
                     // Navigator.pushNamed(context, "/subscription");
@@ -295,7 +302,7 @@ class _ProfilState extends State<Profil> {
                     backgroundColor: Color(0xFFF5F6F9),
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
+                  //  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
                     // Navigator.pushNamed(context, "/subscription");
 
 
@@ -327,7 +334,7 @@ class _ProfilState extends State<Profil> {
                     backgroundColor: Color(0xFFF5F6F9),
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
+                  //  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
                     // Navigator.pushNamed(context, "/subscription");
 
 

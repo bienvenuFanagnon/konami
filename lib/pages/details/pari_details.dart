@@ -8,6 +8,7 @@ import '../../models/soccers_models.dart';
 import '../../providers/equipe_provider.dart';
 import '../../providers/providers.dart';
 import '../match.dart';
+import '../profil/wallet/homeWallet.dart';
 
 class DetailsPari extends StatefulWidget {
   final Pari pari;
@@ -126,7 +127,10 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver  
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
+
+                  },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

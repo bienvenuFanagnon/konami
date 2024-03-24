@@ -12,6 +12,7 @@ import '../../providers/providers.dart';
 import 'package:badges/badges.dart' as badges;
 
 import '../categories/football.dart';
+import '../profil/wallet/homeWallet.dart';
 
 class TeamSelectedPage extends StatefulWidget {
   @override
@@ -83,7 +84,10 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
+
+                  },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [

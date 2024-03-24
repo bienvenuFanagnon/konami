@@ -181,8 +181,8 @@ class _HomeWalletState extends State<HomeWallet> {
 
                           ],
                           views: [
-                            TransactionDepot(),
-                            TransactionRetrait(),
+                            TransactionDepot(typeCompte: TypeCompte.PARTICULIER.name,),
+                            TransactionRetrait(typeCompte: TypeCompte.PARTICULIER.name,),
 
                           ],
                           onChange: (index) => print(index),

@@ -819,13 +819,13 @@ class EquipeProvider extends ChangeNotifier {
     }
     return id;
   }
-  Stream<List<TransactionData>> getUserTransactionDepot(String user_id) async* {
+  Stream<List<TransactionData>> getUserTransactionDepot(String user_id,String type_compte) async* {
     print("Transactions");
     var pariStream = FirebaseFirestore.instance.collection('Transactions')
     // .where("entreprise_id",isEqualTo:'${entrepriseId}')
 
         .where("type",isEqualTo:'${TypeTransaction.DEPOT.name}')
-        .where("type_compte",isEqualTo:'${TypeCompte.PARTICULIER.name}')
+        .where("type_compte",isEqualTo:'${type_compte}')
     // .orderBy("status")
         .where( 'user_id', isEqualTo:  user_id! )// Order by status first
         .orderBy("createdAt", descending: true)
@@ -837,7 +837,7 @@ class EquipeProvider extends ChangeNotifier {
     listPari =[];
     //  UserData userData=UserData();
     await for (var snapshot in pariStream) {
-    //  transactions = [];
+      transactions = [];
       listPari =[];
 
       for (var trans in snapshot.docs) {
@@ -871,12 +871,12 @@ class EquipeProvider extends ChangeNotifier {
     }
   }
 
-  Stream<List<TransactionData>> getUserTransactionRetrait(String user_id) async* {
+  Stream<List<TransactionData>> getUserTransactionRetrait(String user_id,String type_compte) async* {
     var pariStream = FirebaseFirestore.instance.collection('Transactions')
     // .where("entreprise_id",isEqualTo:'${entrepriseId}')
 
         .where("type",isEqualTo:'${TypeTransaction.RETRAIT.name}')
-        .where("type_compte",isEqualTo:'${TypeCompte.PARTICULIER.name}')
+        .where("type_compte",isEqualTo:'${type_compte}')
 
     // .orderBy("status")
         .where( 'user_id', isEqualTo:  user_id! )// Order by status first

@@ -13,7 +13,9 @@ import '../../../../providers/providers.dart';
 
 
 class TransactionRetrait extends StatefulWidget {
-  const TransactionRetrait({super.key});
+  final String typeCompte;
+
+  const TransactionRetrait({super.key, required this.typeCompte});
 
   @override
   State<TransactionRetrait> createState() => _AllPariState();
@@ -114,7 +116,7 @@ class _AllPariState extends State<TransactionRetrait> {
     double width = MediaQuery.of(context).size.width;
     return Center(
       child: StreamBuilder<List<TransactionData>>(
-          stream: equipeProvider.getUserTransactionRetrait(serviceProvider.loginUser.id_db!),
+          stream: equipeProvider.getUserTransactionRetrait(serviceProvider.loginUser.id_db!,widget.typeCompte),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
 
             if (snapshot.hasData) {

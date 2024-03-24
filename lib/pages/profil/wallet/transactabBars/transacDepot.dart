@@ -13,7 +13,8 @@ import '../../../../providers/providers.dart';
 
 
 class TransactionDepot extends StatefulWidget {
-  const TransactionDepot({super.key});
+  final String typeCompte;
+  const TransactionDepot({super.key, required this.typeCompte});
 
   @override
   State<TransactionDepot> createState() => _AllPariState();
@@ -118,7 +119,7 @@ class _AllPariState extends State<TransactionDepot> {
     double width = MediaQuery.of(context).size.width;
     return Center(
       child: StreamBuilder<List<TransactionData>>(
-          stream: equipeProvider.getUserTransactionDepot(serviceProvider.loginUser.id_db!),
+          stream: equipeProvider.getUserTransactionDepot(serviceProvider.loginUser.id_db!,widget.typeCompte),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
 
             if (snapshot.hasData) {
