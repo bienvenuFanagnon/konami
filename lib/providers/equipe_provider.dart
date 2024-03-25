@@ -139,10 +139,9 @@ class EquipeProvider extends ChangeNotifier {
     }
 
   }
-
   Stream<List<Pari>> getListPari(String user_id) async* {
     var pariStream = FirebaseFirestore.instance.collection('PariEnCours')
-       // .where("entreprise_id",isEqualTo:'${entrepriseId}')
+    // .where("entreprise_id",isEqualTo:'${entrepriseId}')
 
 
         .where( Filter.or(
@@ -157,7 +156,7 @@ class EquipeProvider extends ChangeNotifier {
     //  .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
         .orderBy("status")  // Order by status first
         .orderBy("createdAt", descending: true)
-       // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+    // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
 
 
         .snapshots();
@@ -203,6 +202,79 @@ class EquipeProvider extends ChangeNotifier {
     }
   }
 
+  Stream<int> getUserAllListPariCount(String user_id) async* {
+    var pariStream = FirebaseFirestore.instance.collection('PariEnCours')
+       // .where("entreprise_id",isEqualTo:'${entrepriseId}')
+
+
+        .where( Filter.or(
+      Filter('status', isEqualTo:  '${PariStatus.ATTENTE.name}'),
+      Filter('status', isEqualTo:  '${PariStatus.DISPONIBLE.name}'),
+      Filter('status', isEqualTo:  '${PariStatus.ENCOURS.name}'),
+
+    ))
+        .where("user_id",isNotEqualTo:'${user_id}')
+        .orderBy('user_id', descending: true) // Ordering by 'user_id' (matches filter)
+
+    //  .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
+        .orderBy("status")  // Order by status first
+        .orderBy("createdAt", descending: true)
+       // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+
+
+        .snapshots();
+    List<Pari> paries = [];
+    listPari =[];
+    //  UserData userData=UserData();
+    await for (var snapshot in pariStream) {
+      paries = [];
+      listPari =[];
+
+      for (var post in snapshot.docs) {
+        //  print("post : ${jsonDecode(post.toString())}");
+        Pari p=Pari.fromJson(post.data());
+
+        paries.add(p);
+        print("pari lgt : ${listPari.length}");
+        listPari=paries;
+
+
+      }
+      yield listPari.length;
+    }
+  }
+  Stream<int> getMyUserAllListPariCount(String user_id) async* {
+    var pariStream = FirebaseFirestore.instance.collection('PariEnCours')
+    // .where("entreprise_id",isEqualTo:'${entrepriseId}')
+        .where( 'user_id', isEqualTo:  user_id!
+
+    )
+    // .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
+    //  .orderBy("status")  // Order by status first
+        .orderBy("createdAt", descending: true)
+    // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+
+
+        .snapshots();
+    List<Pari> paries = [];
+    listPari =[];
+    //  UserData userData=UserData();
+    await for (var snapshot in pariStream) {
+      paries = [];
+      listPari =[];
+
+      for (var post in snapshot.docs) {
+        //  print("post : ${jsonDecode(post.toString())}");
+        Pari p=Pari.fromJson(post.data());
+
+        paries.add(p);
+        listPari=paries;
+
+
+      }
+      yield listPari.length;
+    }
+  }
   Stream<List<Pari>> getUserAllListPari(String user_id) async* {
     var pariStream = FirebaseFirestore.instance.collection('PariEnCours')
     // .where("entreprise_id",isEqualTo:'${entrepriseId}')
@@ -459,6 +531,44 @@ class EquipeProvider extends ChangeNotifier {
       yield matches;
     }
   }
+
+  Stream<int> getListMatchCount(String user_id) async* {
+    var pariStream = FirebaseFirestore.instance.collection('Matches')
+    // .where("entreprise_id",isEqualTo:'${entrepriseId}')
+    //  .where("status",isNotEqualTo:'${PariStatus.PARIER.name}')
+    // .where("dataType",isEqualTo:'${PostDataType.IMAGE.name}')
+        .where( Filter.or(
+      Filter('user_a_id', isEqualTo:  user_id!),
+      Filter('user_b_id', isEqualTo:  user_id!),
+
+    ))
+        .where("status",isNotEqualTo:'${MatchStatus.FINISHED.name}')
+        .orderBy("status")
+        .orderBy('createdAt', descending: true)
+
+        .snapshots();
+    List<MatchPari> matches = [];
+
+    //  UserData userData=UserData();
+    await for (var snapshot in pariStream) {
+      matches = [];
+      listPari =[];
+
+      for (var post in snapshot.docs) {
+        //  print("post : ${jsonDecode(post.toString())}");
+        MatchPari match=MatchPari.fromJson(post.data());
+
+
+
+        matches.add(match);
+        //  listPari=paries;
+
+
+      }
+      yield matches.length;
+    }
+  }
+
   Stream<List<MatchPari>> getListMatch(String user_id) async* {
     var pariStream = FirebaseFirestore.instance.collection('Matches')
        // .where("entreprise_id",isEqualTo:'${entrepriseId}')

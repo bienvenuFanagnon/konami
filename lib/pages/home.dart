@@ -4,8 +4,10 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:konami_bet/pages/pariencours.dart';
 import 'package:konami_bet/pages/profil/profile.dart';
 import 'package:provider/provider.dart';
+import '../providers/equipe_provider.dart';
 import '../providers/providers.dart';
 import 'account.dart';
+import 'package:badges/badges.dart' as badges;
 import 'matche_non_jouer.dart';
 import 'history.dart';
 import 'homepages.dart';
@@ -30,8 +32,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 2;
-  late ServiceProvider serviceProvider = Provider.of<ServiceProvider>(context,listen: false);
+  late ServiceProvider serviceProvider =
+  Provider.of<ServiceProvider>(context, listen: false);
+  String formatDateMatch = "dd MMM yyyy";
 
+
+  late EquipeProvider equipeProvider =
+  Provider.of<EquipeProvider>(context, listen: false);
   final List<Widget> _pages = [
 
 
@@ -50,7 +57,34 @@ class _MyHomePageState extends State<MyHomePage> {
     //
 
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: WillPopScope(
+          onWillPop: () async {
+            // Affichez une boîte de dialogue de confirmation
+            return await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Voulez-vous vraiment quitter ?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+
+                    },
+                    child: Text('Non'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.pop(context, true);
+
+                    },
+                    child: Text('Oui'),
+                  ),
+                ],
+              ),
+            );
+          },
+
+          child: _pages[_selectedIndex]),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white ,
@@ -62,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
             _selectedIndex = index;
           });
         },
-        items: const <BottomNavigationBarItem>[
+        items:  <BottomNavigationBarItem>[
 
 
           BottomNavigationBarItem(
@@ -70,7 +104,33 @@ class _MyHomePageState extends State<MyHomePage> {
             label: 'Historique',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.hourglass_empty_rounded),
+            icon:StreamBuilder<int>(
+                stream: equipeProvider.getUserAllListPariCount(serviceProvider.loginUser.id_db!),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    int count =snapshot.data;
+
+                    return   badges.Badge(
+                      showBadge:count>0? true:false,
+
+                      badgeContent: Text(count>9?"+9":'${count}',style: TextStyle(color: Colors.white),),
+                      child: Icon(Icons.hourglass_empty_rounded),
+                    );
+                  } else if (snapshot.hasError) {
+                    return badges.Badge(
+                      showBadge: false,
+                      badgeContent: Text('',style: TextStyle(color: Colors.white),),
+                      child: Icon(Icons.hourglass_empty_rounded),
+                    );
+                  } else {
+                    return badges.Badge(
+                      showBadge: false,
+
+                      badgeContent: Text('',style: TextStyle(color: Colors.white),),
+                      child: Icon(Icons.hourglass_empty_rounded),
+                    );
+                  }
+                }) ,
             label: 'Encours',
           ),
           BottomNavigationBarItem(
@@ -79,7 +139,33 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
 
           BottomNavigationBarItem(
-            icon: Icon(MaterialCommunityIcons.soccer_field),
+            icon:StreamBuilder<int>(
+                stream: equipeProvider.getListMatchCount(serviceProvider.loginUser.id_db!),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    int count =snapshot.data;
+
+                    return   badges.Badge(
+                      showBadge:count>0? true:false,
+
+                      badgeContent: Text(count>9?"+9":'${count}',style: TextStyle(color: Colors.white),),
+                      child: Icon(MaterialCommunityIcons.soccer_field),
+                    );
+                  } else if (snapshot.hasError) {
+                    return badges.Badge(
+                      showBadge: false,
+                      badgeContent: Text('',style: TextStyle(color: Colors.white),),
+                      child: Icon(MaterialCommunityIcons.soccer_field),
+                    );
+                  } else {
+                    return badges.Badge(
+                      showBadge: false,
+
+                      badgeContent: Text('',style: TextStyle(color: Colors.white),),
+                      child: Icon(MaterialCommunityIcons.soccer_field),
+                    );
+                  }
+                }) ,
             label: 'Matches',
           ),
           BottomNavigationBarItem(

@@ -917,16 +917,21 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                                               color:
                                                                   Colors.red),
                                                         )
-                                                      : Text(
-                                                          'Lancer le jeu',
-                                                          style: TextStyle(
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              color:
-                                                                  Colors.white),
-                                                        )),
+                                                      : Column(
+                                                        children: [
+                                                          Icon(Entypo.game_controller,color: Colors.black,),
+                                                          Text(
+                                                              'Lancer le jeu',
+                                                              style: TextStyle(
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                  color:
+                                                                      Colors.white),
+                                                            ),
+                                                        ],
+                                                      )),
                                     ),
                                   ],
                                 ),
