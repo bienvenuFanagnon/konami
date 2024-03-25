@@ -199,6 +199,13 @@ Future<bool> getUserAndOperation(String codeParrain,BuildContext context) async 
          userParrain.nombre_pari_parrainage=userParrain.nombre_pari_parrainage!+1;
          if (userParrain.nombre_pari_parrainage!>99) {
            userParrain.montant_compte_parrain=userParrain.montant_compte_parrain!+2000;
+           await getAppData().then((appdatas) async {
+             if (appdatas.isNotEmpty) {
+               appdatas.first.adminSolde= appdatas.first.adminSolde-2000;
+               await updateAppData(appdatas.first, context);
+             }
+
+           },);
            userParrain.nombre_pari_parrainage=0;
            TransactionData transaction = TransactionData(// Pending, validated, or rejected
            );

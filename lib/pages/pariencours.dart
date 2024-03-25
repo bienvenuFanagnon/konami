@@ -66,21 +66,36 @@ class _PariEnCoursState extends State<PariEnCours> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      for(Equipe eq in pari.teams!)
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Container(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-                            child: Image.network("${eq.logo!}",fit: BoxFit.cover,),
-                            width: 30,
-                            height: 30,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          for(Equipe eq in pari.teams!)
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Container(
+
+                                child: Image.network("${eq.logo!}",fit: BoxFit.cover,),
+                                width: 30,
+                                height: 30,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
+                      Row(
+                        children: [
+                          Icon(Icons.person),
+                          SizedBox(width: 5,),
+                          Text("@${pari.user!.pseudo!}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w900,fontSize: 15),),
+                        ],
+                      )
+
                     ],
                   ),
                   StatefulBuilder(
@@ -143,7 +158,6 @@ class _PariEnCoursState extends State<PariEnCours> {
                                 child: CircularProgressIndicator()):Text("Jouer",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w900,fontSize: 15),)));
                       }
                   ),
-
 
                 ],
               ),

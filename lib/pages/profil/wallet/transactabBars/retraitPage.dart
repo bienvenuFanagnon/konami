@@ -99,6 +99,7 @@ class _RetraitPageState extends State<RetraitPage> {
                               await  equipeProvider.createTransaction(transaction);
                               if (transaction.status==TransactionStatus.VALIDER.name) {
                                 user.montant=user.montant-double.parse(_montantController.text);
+                                user.nombre_retrait=user.nombre_retrait!+1;
                                 //  print("apres : ${user.montant}");
                                 await  serviceProvider.updateUser(user, context);
                                 ScaffoldMessenger.of(context).showSnackBar(

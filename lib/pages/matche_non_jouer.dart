@@ -73,6 +73,14 @@ class _MyListMatchState extends State<MyListMatch> {
                 children: [
                   Column(
                     children: [
+                      Row(
+                        children: [
+                          Icon(Icons.person),
+                          SizedBox(width: 5,),
+                          Text("@${matchPari.user_a!.pseudo!}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w900,fontSize: 15),),
+                        ],
+                      ),
+                      SizedBox(height: 10,),
                       matchPari.user_a_id!=serviceProvider.loginUser.id_db?Text("Adverse".toUpperCase(),style: TextStyle(color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),):   Text("Vous".toUpperCase(),style: TextStyle(color: Colors.green,fontWeight: FontWeight.w600,fontSize: 15),),
 
                       Text("Equipes A",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
@@ -103,6 +111,15 @@ class _MyListMatchState extends State<MyListMatch> {
                   ),
                   Column(
                     children: [
+                      Row(
+                        children: [
+                          Icon(Icons.person),
+                          SizedBox(width: 5,),
+                          Text("@${matchPari.user_b!.pseudo!}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w900,fontSize: 15),),
+                        ],
+                      ),
+                      SizedBox(height: 10,),
+
                       matchPari.user_b_id!=serviceProvider.loginUser.id_db?Text("Adverse".toUpperCase(),style: TextStyle(color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),):   Text("Vous".toUpperCase(),style: TextStyle(color: Colors.green,fontWeight: FontWeight.w600,fontSize: 15),),
 
                       Text("Equipes B",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),

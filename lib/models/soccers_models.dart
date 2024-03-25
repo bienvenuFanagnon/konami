@@ -68,6 +68,7 @@ class Utilisateur {
   late String? codePinSecurity="";
   late bool? haveCodeSecurity=false;
   late bool? is_valide=false;
+  late bool? retrait_is_valide=true;
   late bool? is_blocked=false;
   late bool? is_partenaire=false;
   late String? phoneNumber="";
@@ -100,6 +101,7 @@ class Utilisateur {
     this.is_valide = false,
     this.is_blocked = false,
     this.is_partenaire = false,
+    this.retrait_is_valide = true,
     this.phoneNumber = "",
     this.nombre_retrait = 0,
     this.nombre_depot = 0,
