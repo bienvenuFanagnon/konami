@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:konami_bet/models/soccers_models.dart';
 import 'package:konami_bet/pages/auth/registration.dart';
@@ -94,8 +95,47 @@ getUserById(String id,String phone,BuildContext context) async {
     print( this.loginUser.id_db);
     storeToken( loginUser!.id_db!);
 
+    if (loginUser.is_blocked!) {
+      showModalBottomSheet(
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+              height: 200,
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Votre compte a été bloqué',
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Suite à des violations de confidentialité, votre compte a été bloqué. Veuillez nous contacter pour la résolution.',
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'contact');
 
-    Navigator.pushReplacementNamed(context, '/');
+                      // Ouvrir une page de contact
+                    },
+                    child: Text('Contactez-nous',style: TextStyle(color: Colors.white),),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blue,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          });
+    }else{
+      Navigator.pushReplacementNamed(context, '/');
+
+    }
     // notifyListeners();
   }else{
     Navigator.pushReplacement(context, CupertinoDialogRoute(builder: (context) => RegistrationPage(user_id: id, phone: phone,), context: context));
@@ -132,16 +172,57 @@ getChargementUserById(String id,BuildContext context) async {
       print( this.loginUser.id_db);
       storeToken( loginUser!.id_db!);
 
+      if (loginUser.is_blocked!) {
+        showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                height: 200,
+                color: Colors.white,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Votre compte a été bloqué',
+                      style: TextStyle(
+                        color: Colors.red,
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Suite à des violations de confidentialité, votre compte a été bloqué. Veuillez nous contacter pour la résolution.',
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, 'contact');
 
-      Navigator.pushNamed(context, '/');
+                        // Ouvrir une page de contact
+                      },
+                      child: Text('Contactez-nous',style: TextStyle(color: Colors.white),),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.blue,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            });
+      }else{
+        Navigator.pushReplacementNamed(context, '/');
+
+      }
+
+
       // notifyListeners();
     }else{
       //  Navigator.push(context, CupertinoDialogRoute(builder: (context) => RegistrationPage(user_id: id,), context: context));
 
-      Navigator.pushNamed(context, 'phone');
+      Navigator.pushReplacementNamed(context, 'phone');
     }
   }catch(e){
-    Navigator.pushNamed(context, 'phone');
+    Navigator.pushReplacementNamed(context, 'phone');
 
   }
 

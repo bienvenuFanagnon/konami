@@ -37,6 +37,8 @@ class Equipe {
 @JsonSerializable()
 class AppData {
   late String id;
+  late String emailConatct;
+  late bool app_is_valide=true;
 // "en attente", "validé", "rejeté"
 // "depot" ou "retrait"
   late double soldeTotal;
@@ -51,6 +53,28 @@ late int nombre_parrainage=20;
 
   // Add a method that converts this instance to a JSON map
   Map<String, dynamic> toJson() => _$AppDataToJson(this);
+}
+
+@JsonSerializable()
+class Information {
+  String? id;
+  String? media_url;
+  String? type;
+  String? titre;
+  String? status;
+  String? description;
+
+  int? createdAt;
+  int? updatedAt;
+
+
+  Information();
+
+  // Add a factory constructor that creates a new instance from a JSON map
+  factory Information.fromJson(Map<String, dynamic> json) => _$InformationFromJson(json);
+
+  // Add a method that converts this instance to a JSON map
+  Map<String, dynamic> toJson() => _$InformationToJson(this);
 }
 
 @JsonSerializable()

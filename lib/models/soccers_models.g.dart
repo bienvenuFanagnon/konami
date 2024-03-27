@@ -19,15 +19,41 @@ Map<String, dynamic> _$EquipeToJson(Equipe instance) => <String, dynamic>{
 
 AppData _$AppDataFromJson(Map<String, dynamic> json) => AppData()
   ..id = json['id'] as String
+  ..emailConatct = json['emailConatct'] as String
+  ..app_is_valide = json['app_is_valide'] as bool
   ..soldeTotal = (json['soldeTotal'] as num).toDouble()
   ..adminSolde = (json['adminSolde'] as num).toDouble()
   ..nombre_parrainage = json['nombre_parrainage'] as int;
 
 Map<String, dynamic> _$AppDataToJson(AppData instance) => <String, dynamic>{
       'id': instance.id,
+      'emailConatct': instance.emailConatct,
+      'app_is_valide': instance.app_is_valide,
       'soldeTotal': instance.soldeTotal,
       'adminSolde': instance.adminSolde,
       'nombre_parrainage': instance.nombre_parrainage,
+    };
+
+Information _$InformationFromJson(Map<String, dynamic> json) => Information()
+  ..id = json['id'] as String?
+  ..media_url = json['media_url'] as String?
+  ..type = json['type'] as String?
+  ..titre = json['titre'] as String?
+  ..status = json['status'] as String?
+  ..description = json['description'] as String?
+  ..createdAt = json['createdAt'] as int?
+  ..updatedAt = json['updatedAt'] as int?;
+
+Map<String, dynamic> _$InformationToJson(Information instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'media_url': instance.media_url,
+      'type': instance.type,
+      'titre': instance.titre,
+      'status': instance.status,
+      'description': instance.description,
+      'createdAt': instance.createdAt,
+      'updatedAt': instance.updatedAt,
     };
 
 Utilisateur _$UtilisateurFromJson(Map<String, dynamic> json) => Utilisateur(
@@ -46,6 +72,7 @@ Utilisateur _$UtilisateurFromJson(Map<String, dynamic> json) => Utilisateur(
       is_valide: json['is_valide'] as bool? ?? false,
       is_blocked: json['is_blocked'] as bool? ?? false,
       is_partenaire: json['is_partenaire'] as bool? ?? false,
+      retrait_is_valide: json['retrait_is_valide'] as bool? ?? true,
       phoneNumber: json['phoneNumber'] as String? ?? "",
       nombre_retrait: json['nombre_retrait'] as int? ?? 0,
       nombre_depot: json['nombre_depot'] as int? ?? 0,
@@ -74,6 +101,7 @@ Map<String, dynamic> _$UtilisateurToJson(Utilisateur instance) =>
       'codePinSecurity': instance.codePinSecurity,
       'haveCodeSecurity': instance.haveCodeSecurity,
       'is_valide': instance.is_valide,
+      'retrait_is_valide': instance.retrait_is_valide,
       'is_blocked': instance.is_blocked,
       'is_partenaire': instance.is_partenaire,
       'phoneNumber': instance.phoneNumber,

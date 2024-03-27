@@ -909,6 +909,31 @@ class EquipeProvider extends ChangeNotifier {
     return list.first;
 
   }
+  Future<List<Information>> getListInfo() async {
+    //await getAppData();
+    late List<Information> list= [];
+
+    CollectionReference collectionRef =
+    FirebaseFirestore.instance.collection('Informations');
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await collectionRef.get()
+        .then((value){
+
+      print(value);
+      return value;
+    }).catchError((onError){
+
+    });
+
+    // Get data from docs and convert map to List
+    list = querySnapshot.docs.map((doc) =>
+        Information.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+
+
+    return list;
+
+  }
 
   Future<String> createTransaction(TransactionData data) async {
     String id = firestore

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:konami_bet/pages/admin/add_team.dart';
+import 'package:konami_bet/pages/profil/wallet/homeWallet.dart';
 import 'package:konami_bet/providers/equipe_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -65,7 +66,7 @@ class _HomePageState extends State<HomePage> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-
+backgroundColor: Colors.green.withOpacity(0.5),
       body: WillPopScope(
         onWillPop: () async {
           // Affichez une boîte de dialogue de confirmation
@@ -100,7 +101,7 @@ class _HomePageState extends State<HomePage> {
           },
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Colors.green.shade50,
 
               /*
           image: DecorationImage(
@@ -160,71 +161,77 @@ class _HomePageState extends State<HomePage> {
                       )
                     ],
                   ),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Center(
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.add_circle,
-                                  color: Colors.green,
-                                  size: 20,
-                                ))),
-                        Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(150),
-                          ),
-                          elevation: 2,
-                          shadowColor: Colors.black,
-                          color: Colors.black54,
-                          child: Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.account_balance_wallet_rounded,
-                                    size: 20,
-                                    color: Colors.yellow,
-                                  ),
-                                  StreamBuilder<Utilisateur>(
-                                      stream: serviceProvider.getOnLyStreamUser(serviceProvider.loginUser.id_db!),
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot snapshot) {
-                                        if (snapshot.hasData) {
-                                          Utilisateur user=snapshot.data;
-                                          return Center(
-                                            child: Text(
-                                              ' ${user.montant} XOF',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          );
-                                        } else if (snapshot.hasError) {
-                                          return Icon(Icons.error_outline);
-                                        } else {
-                                          return CircularProgressIndicator();
-                                        }
-                                      })
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
 
-                                ],
+                    },
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Center(
+                              child: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.add_circle,
+                                    color: Colors.green,
+                                    size: 20,
+                                  ))),
+                          Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(150),
+                            ),
+                            elevation: 2,
+                            shadowColor: Colors.black,
+                            color: Colors.black54,
+                            child: Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.account_balance_wallet_rounded,
+                                      size: 20,
+                                      color: Colors.yellow,
+                                    ),
+                                    StreamBuilder<Utilisateur>(
+                                        stream: serviceProvider.getOnLyStreamUser(serviceProvider.loginUser.id_db!),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot snapshot) {
+                                          if (snapshot.hasData) {
+                                            Utilisateur user=snapshot.data;
+                                            return Center(
+                                              child: Text(
+                                                ' ${user.montant} XOF',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            );
+                                          } else if (snapshot.hasError) {
+                                            return Icon(Icons.error_outline);
+                                          } else {
+                                            return CircularProgressIndicator();
+                                          }
+                                        })
+
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Center(
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.remove_circle_outlined,
-                                  color: Colors.red,
-                                  size: 20,
-                                ))),
-                      ],
+                          Center(
+                              child: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.remove_circle_outlined,
+                                    color: Colors.red,
+                                    size: 20,
+                                  ))),
+                        ],
+                      ),
                     ),
                   ),
 
@@ -243,8 +250,8 @@ class _HomePageState extends State<HomePage> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15.0),
                             image: const DecorationImage(
-                              image: AssetImage('assets/competition1.png'),
-                              fit: BoxFit.fill,
+                              image: AssetImage('assets/img2.jpg'),
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
@@ -260,25 +267,8 @@ class _HomePageState extends State<HomePage> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15.0),
                             image: const DecorationImage(
-                              image: AssetImage('assets/competition2.jpg'),
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        elevation: 2,
-                        child: Container(
-                          height: MediaQuery.of(context).size.height*0.3,
-                          width: MediaQuery.of(context).size.width / 0.9,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.0),
-                            image: const DecorationImage(
-                              image: AssetImage('assets/competition3.png'),
-                              fit: BoxFit.fill,
+                              image: AssetImage('assets/img3.jpeg'),
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
@@ -306,13 +296,66 @@ class _HomePageState extends State<HomePage> {
                         ),
                         elevation: 2,
                         child: Container(
-                          height: MediaQuery.of(context).size.height *0.3,
+                          height: MediaQuery.of(context).size.height*0.3,
                           width: MediaQuery.of(context).size.width / 0.9,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15.0),
                             image: const DecorationImage(
-                              image: AssetImage('assets/competition5.jpg'),
-                              fit: BoxFit.fill,
+                              image: AssetImage('assets/img4.jpg'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        elevation: 2,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height*0.3,
+                          width: MediaQuery.of(context).size.width / 0.9,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            image: const DecorationImage(
+                              image: AssetImage('assets/img5.jpg'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+
+
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        elevation: 2,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height*0.3,
+                          width: MediaQuery.of(context).size.width / 0.9,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            image: const DecorationImage(
+                              image: AssetImage('assets/img6.jpg'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        elevation: 2,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height*0.3,
+                          width: MediaQuery.of(context).size.width / 0.9,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            image: const DecorationImage(
+                              image: AssetImage('assets/img7.jpg'),
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
@@ -334,23 +377,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        elevation: 2,
-                        child: Container(
-                          height: MediaQuery.of(context).size.height*0.3,
-                          width: MediaQuery.of(context).size.width / 0.9,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15.0),
-                            image: const DecorationImage(
-                              image: AssetImage('assets/competition7.png'),
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ),
-                      ),
+
                     ],
                     options: CarouselOptions(
                       height: MediaQuery.of(context).size.height * 0.2,

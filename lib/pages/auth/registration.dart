@@ -279,6 +279,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   backgroundColor: Colors.green,
                                 ),
                               );
+                              Navigator.pushReplacementNamed(context, "infos");
+
                               setState(() {
                                 onTap=false;
                               });

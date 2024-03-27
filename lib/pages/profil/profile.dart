@@ -303,7 +303,7 @@ class _ProfilState extends State<Profil> {
                   ),
                   onPressed: () {
                   //  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
-                    // Navigator.pushNamed(context, "/subscription");
+                     Navigator.pushNamed(context, "infos");
 
 
                     // Share.share('https://play.google.com/store/apps/details?id=com.hilexpertiz.mykeys.mykeys');
@@ -334,7 +334,9 @@ class _ProfilState extends State<Profil> {
                     backgroundColor: Color(0xFFF5F6F9),
                   ),
                   onPressed: () {
-                  //  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
+                    Navigator.pushNamed(context, "contact");
+
+                    //  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
                     // Navigator.pushNamed(context, "/subscription");
 
 

@@ -55,13 +55,15 @@ class _HomeWalletState extends State<HomeWallet> {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  "Votre compte a été temporairement suspendu en raison d'une violation de nos règles. Veuillez nous contacter pour une vérification.",
+                  "Votre compte retrait a été temporairement suspendu en raison d'une violation de nos règles. Veuillez nous contacter pour une vérification.",
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                  //  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
+                    Navigator.pushNamed(context, 'contact');
+
+                    //  Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
 
                   },
                   child: Row(

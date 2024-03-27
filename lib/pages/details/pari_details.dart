@@ -593,7 +593,7 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver  
                         await serviceProvider.getUserByIdContente(serviceProvider.loginUser.id_db!, context).then((value) async {
                           if (value) {
                             if (serviceProvider.loginUser.montant>0&&serviceProvider.loginUser.montant>=monPari.montant!) {
-                              equipeProvider.getOnlyPari(widget.pari.id!).then((value) async {
+                              await     equipeProvider.getOnlyPari(widget.pari.id!).then((value) async {
                                 if (value.status!=PariStatus.PARIER.name) {
                                   try{
                                     String id = FirebaseFirestore.instance
@@ -603,12 +603,14 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver  
                                     //  Pari pari=Pari();
                                     monPari.id=id;
                                     monPari.score=0;
+                                    monPari.teams_id=[];
                                     monPari.resultStatus=PariResultStatus.NAN.name;
 
                                     monPari.status=PariStatus.PARIER.name;
                                     for(Equipe eq in monPari.teams!){
                                       monPari.teams_id!.add(eq.id!);
                                     }
+                                    monPari.teams=[];
                                     //   pari.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
                                     //   pari.updatedAt= DateTime.now().millisecondsSinceEpoch;
                                     await FirebaseFirestore.instance.collection('PariEnCours').doc(id).set(monPari.toJson());

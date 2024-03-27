@@ -53,7 +53,7 @@ class _MyPhoneState extends State<MyPhone> {
         setState(() {
           _isLoading = false;
         });
-        Navigator.of(context).push(MaterialPageRoute(
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (c) => VerificationOtp(
               verificationId: verificationId,
               phoneNumber: phone,
@@ -114,9 +114,9 @@ class _MyPhoneState extends State<MyPhone> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/img1.png',
-                    width: 150,
-                    height: 150,
+                    'assets/login.png',
+                    width: 200,
+                    height: 200,
                   ),
                   SizedBox(
                     height: 25,
@@ -197,6 +197,7 @@ class _MyPhoneState extends State<MyPhone> {
                        _isLoading = true;
                      });
                     await sendOtpCode('${countryController.text+phone}');
+                     phone="";
 
                      /*
                      await FirebaseAuth.instance.verifyPhoneNumber(

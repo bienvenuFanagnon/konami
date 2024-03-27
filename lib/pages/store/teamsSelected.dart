@@ -269,7 +269,9 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                         ),
             ),
                 SizedBox(height: 20,),
-                TextButton(onPressed: () async {
+                TextButton(onPressed:onTap?() {
+
+                } :() async {
                   if (_formKey.currentState!.validate()) {
                     if (equipeProvider.teams_selected.length==3) {
                       setState(() {
@@ -289,19 +291,21 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                               pari.score=0;
                               pari.resultStatus=PariResultStatus.NAN.name;
                               pari.teams=[];
+                              pari.teams_id=[];
                               pari.montant=double.parse(montantController.text);
                               pari.user_id=serviceProvider.loginUser.id_db!;
                               pari.status=PariStatus.DISPONIBLE.name;
                               for(Equipe eq in equipeProvider.teams_selected){
                                 pari.teams_id!.add(eq.id!);
                               }
+                              equipeProvider.teams_selected=[];
+
                               pari.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
                               pari.updatedAt= DateTime.now().millisecondsSinceEpoch;
                               await FirebaseFirestore.instance.collection('PariEnCours').doc(id).set(pari.toJson());
                               serviceProvider.loginUser.montant=serviceProvider.loginUser.montant-double.parse(montantController.text);
                               await  serviceProvider.updateUser(serviceProvider.loginUser, context);
 
-                              equipeProvider.teams_selected=[];
                               montantController.text="";
                               SnackBar snackBar = SnackBar(
                                 content: Text(
