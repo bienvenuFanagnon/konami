@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,6 +26,8 @@ import 'package:provider/provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseFirestore.instance.settings =
+  const Settings(persistenceEnabled: false);
   // Planifier une tâche récurrente toutes les 10 secondes
   //final scheduler = IntervalScheduler(delay: Duration(seconds: 5));
 

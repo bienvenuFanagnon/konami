@@ -22,9 +22,10 @@
         </intent>
     </queries>
    <application
-        android:label="konami_bet"
+        android:label="Konami bet"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+       android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"

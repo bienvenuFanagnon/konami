@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
 import '../models/soccers_models.dart';
 import '../providers/equipe_provider.dart';
@@ -23,14 +25,18 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
     Random random = Random();
     return random.nextInt(30);
   }
-
+  late VideoPlayerController _video_controller;
+  bool _isPlaying = false;
   late AnimationController _controller;
+  late Future<void> _initializeVideoPlayerFuture;
 
   late ServiceProvider serviceProvider =
       Provider.of<ServiceProvider>(context, listen: false);
   late EquipeProvider equipeProvider =
       Provider.of<EquipeProvider>(context, listen: false);
   bool onTap = false;
+  late String videoUrl1 = "https://firebasestorage.googleapis.com/v0/b/konami-bet.appspot.com/o/soccer_media%2FRoboCup2023SoccerSimulation2DFinal.mp4?alt=media&token=6844c22e-963c-4e0a-bea9-a4cf248e6b81";
+  late String videoUrl = "https://firebasestorage.googleapis.com/v0/b/konami-bet.appspot.com/o/soccer_media%2Fsoccer_v1.mp4?alt=media&token=16cba566-5c94-4c21-b66e-499953f41d56";
 
   void showWinBottomSheet(BuildContext context, double gains) {
     showModalBottomSheet(
@@ -84,8 +90,19 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
+    // TODO: implement
+    _video_controller = VideoPlayerController.contentUri(Uri.parse(videoUrl));
+    _video_controller.setVolume(0.0);
+
+    _initializeVideoPlayerFuture = _video_controller.initialize().then((_) {
+
+    });
+
     super.initState();
+
+
+
+    _isPlaying = true;
     _controller = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -95,9 +112,24 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
+    _video_controller.dispose();
     super.dispose();
   }
 
+  void _startPlaying() {
+    setState(() {
+      _isPlaying = true;
+      _video_controller.play();
+    });
+
+    // Arrête automatiquement la lecture après 20 secondes
+    Timer(Duration(seconds: 20), () {
+      setState(() {
+        _isPlaying = false;
+        _video_controller.pause();
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -120,6 +152,15 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   MatchPari match = snapshot.data;
+                  if (match.status ==
+                      MatchStatus
+                          .ENCOURS.name) {
+                    _video_controller.setLooping(true);
+
+                      _video_controller.play();
+
+
+                  }
                   return Container(
                     child: ListView(
                       // mainAxisAlignment: MainAxisAlignment.center,
@@ -510,6 +551,10 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                         ),
                                       ),
                                       onEnd: () async {
+                                        _video_controller.pause();
+                                        //_video_controller.dispose();
+
+
                                         await equipeProvider
                                             .getOnlyMatch(
                                             match.id!)
@@ -787,6 +832,7 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                   ],
                                 ),
                               ),
+
                               Padding(
                                 padding: const EdgeInsets.all(20.0),
                                 child: Container(
@@ -795,11 +841,40 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                       border: Border.all(color: Colors.white)),
                                   height: height * 0.2,
                                   width: width,
-                                  child: SizedBox(
-                                    width: 20,
-                                      height: 20,
-
-                                      child: CircularProgressIndicator(color: Colors.green,)),
+                                  child:  FutureBuilder(
+                                      future: _initializeVideoPlayerFuture,
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot snapshot) {
+                                        if (snapshot.hasData) {
+                                          return _video_controller.value.isInitialized
+                                              ? VideoPlayer(
+                                                  key: new PageStorageKey(videoUrl),
+                                                  _video_controller
+                                              )
+                                              : Container(
+                                              height: 20,
+                                              width: 20,
+                                              child: CircularProgressIndicator(color: Colors.green,));
+                                        } else if (snapshot.hasError) {
+                                          print("error ${snapshot.error}");
+                                          return Icon(Icons.error_outline,color: Colors.red,);
+                                        } else if(snapshot.connectionState == ConnectionState.done) {
+                                          return _video_controller.value.isInitialized
+                                              ? VideoPlayer(
+                                              key: new PageStorageKey(videoUrl),
+                                              _video_controller
+                                          )
+                                              : Container(
+                                              height: 20,
+                                              width: 20,
+                                              child: CircularProgressIndicator(color: Colors.green,));
+                                        }  else {
+                                          return Container(
+                                              height: 20,
+                                              width: 20,
+                                              child: CircularProgressIndicator(color: Colors.green,));
+                                        }
+                                      }),
                                 ),
                               ),
                             ],
@@ -847,6 +922,9 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                                       await equipeProvider
                                                           .updateMatch(
                                                               match, context);
+
+                                                      _video_controller.play();
+
                                                     });
                                                   } else {
                                                     SnackBar snackBar =

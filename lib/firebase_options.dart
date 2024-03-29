@@ -65,5 +65,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '929345678957',
     projectId: 'konami-bet',
     storageBucket: 'konami-bet.appspot.com',
+
+
   );
 }
