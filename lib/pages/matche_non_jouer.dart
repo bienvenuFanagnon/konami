@@ -164,13 +164,34 @@ class _MyListMatchState extends State<MyListMatch> {
                         onTap=true;
 
                       });
-                    await  equipeProvider.getOnlyMatch(matchPari.id!).then((value) {
-                        if (value.status==MatchStatus.ATTENTE.name) {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MatchLive( match:value ,),));
+                    await  equipeProvider.getOnlyMatch(matchPari.id!).then((value) async {
+                        if (value.status!=MatchStatus.FINISHED.name) {
+                          await    serviceProvider.getAppData().then(((appData) {
+                            if (appData.isNotEmpty) {
+                              if (appData.first.videos!.isNotEmpty) {
+                                appData.first.videos!.shuffle();
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => MatchLive( match:value, urlVideo: appData.first.videos!.first ,),));
 
+
+                              }
+                            }
+
+                          }));
                         }  else{
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MatchLive( match:value ,),));
+                          /*
+                          await    serviceProvider.getAppData().then(((appData) {
+                            if (appData.isNotEmpty) {
+                              if (appData.first.videos!.isNotEmpty) {
+                                appData.first.videos!.shuffle();
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => MatchLive( match:value, urlVideo: appData.first.videos!.first ,),));
 
+
+                              }
+                            }
+
+                          }));
+
+                           */
                           print("match non disponible : ${value.status}");
                         }
                       },);

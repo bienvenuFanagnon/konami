@@ -651,7 +651,18 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver  
                                     setState(() {
                                       onTap=false;
                                     });
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MatchLive(match: match,),));
+                                    await    serviceProvider.getAppData().then(((appData) {
+                                      if (appData.isNotEmpty) {
+                                        if (appData.first.videos!.isNotEmpty) {
+                                          appData.first.videos!.shuffle();
+                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MatchLive( match:match, urlVideo: appData.first.videos!.first ,),));
+
+
+                                        }
+                                      }
+
+                                    }));
+                                  //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MatchLive(match: match,),));
 
 
                                   }catch(e){

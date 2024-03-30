@@ -21,6 +21,8 @@ AppData _$AppDataFromJson(Map<String, dynamic> json) => AppData()
   ..id = json['id'] as String
   ..emailConatct = json['emailConatct'] as String
   ..app_is_valide = json['app_is_valide'] as bool
+  ..videos =
+      (json['videos'] as List<dynamic>?)?.map((e) => e as String).toList()
   ..soldeTotal = (json['soldeTotal'] as num).toDouble()
   ..adminSolde = (json['adminSolde'] as num).toDouble()
   ..nombre_parrainage = json['nombre_parrainage'] as int;
@@ -29,6 +31,7 @@ Map<String, dynamic> _$AppDataToJson(AppData instance) => <String, dynamic>{
       'id': instance.id,
       'emailConatct': instance.emailConatct,
       'app_is_valide': instance.app_is_valide,
+      'videos': instance.videos,
       'soldeTotal': instance.soldeTotal,
       'adminSolde': instance.adminSolde,
       'nombre_parrainage': instance.nombre_parrainage,

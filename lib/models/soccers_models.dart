@@ -41,6 +41,8 @@ class AppData {
   late bool app_is_valide=true;
 // "en attente", "validé", "rejeté"
 // "depot" ou "retrait"
+  List<String>? videos=[];
+
   late double soldeTotal;
   late double adminSolde;
 late int nombre_parrainage=20;

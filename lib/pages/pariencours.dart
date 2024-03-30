@@ -117,6 +117,7 @@ class _PariEnCoursState extends State<PariEnCours> {
                                 onTap=false;
 
                               });
+
                               Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsPari(pari: pari,),));
 
                             } else{
