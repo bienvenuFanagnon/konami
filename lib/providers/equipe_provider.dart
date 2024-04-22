@@ -21,7 +21,9 @@ class EquipeProvider extends ChangeNotifier {
   DateTime genererDateHistoriqueAleatoire() {
     Random random = Random();
     final year = random.nextInt(3) + 2022;
-    final month = random.nextInt(12) + 1;
+    DateTime now = DateTime.now();
+    int currentMonth = now.month;
+    final month = currentMonth-1;
     final day = random.nextInt(31) + 1;
     return DateTime(year, month, day);
   }

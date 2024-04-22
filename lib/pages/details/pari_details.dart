@@ -60,7 +60,7 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver  
                     ),
                   ),
                   // SizedBox(width: width*0.3,),
-                  Text("${formaterDateMatch(DateTime.fromMillisecondsSinceEpoch(pari.createdAt!))}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
+              //    Text("${formaterDateMatch(DateTime.fromMillisecondsSinceEpoch(pari.createdAt!))}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
 
 
 
@@ -140,7 +140,8 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver  
                     ],
                   ),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    //backgroundColor: ,
+                    backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -182,7 +183,7 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver  
                     ),
                   ),
                   // SizedBox(width: width*0.3,),
-                  Text("${formaterDateMatch(DateTime.fromMillisecondsSinceEpoch(pari.createdAt!))}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
+                  //Text("${formaterDateMatch(DateTime.fromMillisecondsSinceEpoch(pari.createdAt!))}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
 
 
 
@@ -320,7 +321,7 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver  
       child: Scaffold(
           appBar: AppBar(
 
-            title: Text('Pari Details'),
+            title: Text('Créer un match'),
           ),
           body: Container(
             //width: 375,
@@ -343,7 +344,7 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver  
                           ),
                         ),
                         // SizedBox(width: width*0.3,),
-                        Text("${formaterDateMatch(DateTime.fromMillisecondsSinceEpoch(widget.pari.createdAt!))}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
+                       // Text("${formaterDateMatch(DateTime.fromMillisecondsSinceEpoch(widget.pari.createdAt!))}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
 
 
 

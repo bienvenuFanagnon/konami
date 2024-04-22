@@ -97,7 +97,7 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                     ],
                   ),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -261,8 +261,8 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                 if (double.tryParse(value) == null) {
                   return 'Le montant doit être un nombre';
                 }
-                if (int.parse(value)<1000) {
-                  return 'Le montant doit être > 1000 fcfa ';
+                if (int.parse(value)<500) {
+                  return 'Le montant doit être >= 500 fcfa ';
                 }
                 return null;
               },

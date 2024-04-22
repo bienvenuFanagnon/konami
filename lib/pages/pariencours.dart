@@ -88,6 +88,7 @@ class _PariEnCoursState extends State<PariEnCours> {
                           ),
                         ],
                       ),
+                      /*
                       Row(
                         children: [
                           Icon(Icons.person),
@@ -95,6 +96,8 @@ class _PariEnCoursState extends State<PariEnCours> {
                           Text("@${pari.user!.pseudo!}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w900,fontSize: 15),),
                         ],
                       )
+
+                       */
 
                     ],
                   ),
@@ -187,7 +190,7 @@ class _PariEnCoursState extends State<PariEnCours> {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text('Pari En Cours'),
+          title: Text('Autres pari en ligne'),
         ),
         body: Center(
           child: Padding(

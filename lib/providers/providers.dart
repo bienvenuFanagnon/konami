@@ -125,7 +125,7 @@ getUserById(String id,String phone,BuildContext context) async {
                     },
                     child: Text('Contactez-nous',style: TextStyle(color: Colors.white),),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
+                      backgroundColor: Colors.blue,
                     ),
                   ),
                 ],
@@ -202,7 +202,7 @@ getChargementUserById(String id,BuildContext context) async {
                       },
                       child: Text('Contactez-nous',style: TextStyle(color: Colors.white),),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.blue,
+                        backgroundColor: Colors.blue,
                       ),
                     ),
                   ],
