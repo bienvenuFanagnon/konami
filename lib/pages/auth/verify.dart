@@ -265,7 +265,7 @@ class _VerificationOtpState extends State<VerificationOtp> {
                       width: 400,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
+                            backgroundColor: Colors.green,
                             padding: const EdgeInsets.symmetric(vertical: 15)),
                         onPressed: smsCode.length < 6 || loading
                             ? null

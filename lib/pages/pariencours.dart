@@ -200,7 +200,7 @@ class _PariEnCoursState extends State<PariEnCours> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text('Les paris en cours'),
+                      Text('Autres paris en cours'),
                       /*
                       GestureDetector(
                         onTap: () {

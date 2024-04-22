@@ -94,8 +94,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   onPressed: _submitForm,
                   child: Text('Register'),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
-                    onPrimary: Colors.white,
+                    backgroundColor: Colors.green,
+                   // onPrimary: Colors.white,
                   ),
                 ),
               ],

@@ -68,7 +68,7 @@ class _IntroPageState extends State<IntroPage> with SingleTickerProviderStateMix
                               // Votre action
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.indigo.shade700,
+                              backgroundColor: Colors.indigo.shade700,
                             ),
                             child: Container(
                               alignment: Alignment.center,
@@ -86,7 +86,7 @@ class _IntroPageState extends State<IntroPage> with SingleTickerProviderStateMix
                               // Votre action
                             },
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.indigo.shade700,
+                              backgroundColor: Colors.indigo.shade700,
                             ),
                             child: Container(
                               alignment: Alignment.center,

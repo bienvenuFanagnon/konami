@@ -140,7 +140,7 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver  
                     ],
                   ),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

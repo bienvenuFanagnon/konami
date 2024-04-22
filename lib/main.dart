@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart'
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:konami_bet/pages/admin/home.dart';
 import 'package:konami_bet/pages/auth/phone.dart';
 import 'package:konami_bet/pages/auth/registration.dart';
@@ -93,7 +94,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
 
 
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'konami',
       theme: ThemeData(

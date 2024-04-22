@@ -8,6 +8,7 @@ import 'package:konami_bet/services/database.dart';
 import 'package:konami_bet/services/soccer_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 import 'equipe_provider.dart';
 
@@ -125,7 +126,7 @@ getUserById(String id,String phone,BuildContext context) async {
                     },
                     child: Text('Contactez-nous',style: TextStyle(color: Colors.white),),
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
+                      backgroundColor: Colors.blue,
                     ),
                   ),
                 ],
@@ -202,7 +203,7 @@ getChargementUserById(String id,BuildContext context) async {
                       },
                       child: Text('Contactez-nous',style: TextStyle(color: Colors.white),),
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.blue,
+                        backgroundColor: Colors.blue,
                       ),
                     ),
                   ],
@@ -626,4 +627,43 @@ Future<bool> updateAppData(AppData data,BuildContext context) async {
    matchService.deleteById(id);
   notifyListeners();
   }
+
+
+
+Future<bool> makePayment() async {
+  // Remplacez les valeurs suivantes par vos propres informations de compte Perfect Money
+  String accountID = '4529863';
+  String passPhrase = 'Cy1ACdOpNzC4qX38fFc5aqkku';
+  String payerAccount = 'U29094329';
+  String payeeAccount = 'U29094329';
+  double amount = 1; // Montant à transférer
+  String paymentID = '1223';
+
+  String url =
+      'https://perfectmoney.com/acct/confirm.asp?AccountID=$accountID&PassPhrase=$passPhrase&Payer_Account=$payerAccount&Payee_Account=$payeeAccount&Amount=$amount&PAY_IN=1&PAYMENT_ID=$paymentID';
+
+  try {
+    http.Response response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      // Analyser la réponse pour extraire les données nécessaires
+      // Par exemple, vous pouvez utiliser un package HTML parser comme `html` pour extraire les champs de formulaire cachés si nécessaire
+      print(response.body);
+      return true;
+    } else {
+      print('Erreur lors de la requête : ${response.statusCode}');
+      return false;
+
+    }
+  } catch (e) {
+    print('Erreur : $e');
+    return false;
+
+  }
+}
+
+void main() {
+  makePayment();
+}
+
 }

@@ -13,6 +13,7 @@ import '../../../providers/equipe_provider.dart';
 import '../../../providers/providers.dart';
 import 'package:provider/provider.dart';
 
+import '../../paiement/cinepay/paiementCinetpay.dart';
 import '../validate_page.dart';
 
 class HomeWallet extends StatefulWidget {
@@ -75,7 +76,7 @@ class _HomeWalletState extends State<HomeWallet> {
                     ],
                   ),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -129,7 +130,7 @@ class _HomeWalletState extends State<HomeWallet> {
                     ],
                   ),
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.green,
+                    backgroundColor: Colors.green,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -265,7 +266,13 @@ class _HomeWalletState extends State<HomeWallet> {
                       ListTile(
                         leading:     GestureDetector(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => DepotPage(),));
+                           // Navigator.push(context, MaterialPageRoute(builder: (context) => DepotPage(),));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => CinetPay(),));
+                          /* serviceProvider.makePayment().then((value) {
+
+                            },);
+
+                           */
 
 
                           },

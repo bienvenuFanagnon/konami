@@ -98,6 +98,8 @@ class Utilisateur {
   late bool? is_blocked=false;
   late bool? is_partenaire=false;
   late String? phoneNumber="";
+  late String? pay_phone="";
+  late String? pay_prefix_phone="";
   late String? demande_partenaire="";
   late int? nombre_retrait=0;
   late int? nombre_depot=0;
@@ -116,6 +118,8 @@ class Utilisateur {
     this.pseudo = "",
     this.nom = "",
     this.photo = "",
+    this.pay_phone = "",
+    this.pay_prefix_phone = "",
     this.carte_identite = "",
     this.demande_partenaire = "",
     this.numero_carte_identite = "",

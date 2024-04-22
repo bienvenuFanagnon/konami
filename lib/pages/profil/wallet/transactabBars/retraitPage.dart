@@ -62,7 +62,7 @@ class _RetraitPageState extends State<RetraitPage> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.green,
+                      backgroundColor: Colors.green,
                     ),
                     child:ontap? Container(
                       height: 20,
