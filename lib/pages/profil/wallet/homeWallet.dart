@@ -14,6 +14,8 @@ import '../../../providers/providers.dart';
 import 'package:provider/provider.dart';
 
 import '../../paiement/cinepay/paiementCinetpay.dart';
+import '../../paiement/manuel/check_paiement.dart';
+import '../../paiement/paygate/paiementPayGate.dart';
 import '../validate_page.dart';
 
 class HomeWallet extends StatefulWidget {
@@ -267,7 +269,9 @@ class _HomeWalletState extends State<HomeWallet> {
                         leading:     GestureDetector(
                           onTap: () {
                            // Navigator.push(context, MaterialPageRoute(builder: (context) => DepotPage(),));
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => CinetPay(),));
+                            //Navigator.push(context, MaterialPageRoute(builder: (context) => CinetPay(),));
+                           // Navigator.push(context, MaterialPageRoute(builder: (context) => PayGate(),));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => CheckPaymentPage(),));
                           /* serviceProvider.makePayment().then((value) {
 
                             },);
@@ -306,7 +310,7 @@ class _HomeWalletState extends State<HomeWallet> {
                               print("nbr retrait ${serviceProvider.loginUser.nombre_retrait}");
 
                               if (serviceProvider.loginUser.retrait_is_valide!) {
-                                if (serviceProvider.loginUser.nombre_retrait!>1) {
+                                if (serviceProvider.loginUser.nombre_retrait!>-1) {
                                   if (serviceProvider.loginUser.is_valide!) {
 
                                     showDialog(

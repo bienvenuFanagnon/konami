@@ -154,7 +154,7 @@ class _MyPhoneState extends State<MyPhone> {
                           borderSide: BorderSide(),
                         ),
                       ),
-                    //  initialCountryCode: 'TG',
+                     initialCountryCode: 'CI',
                       onChanged: (ph) {
                         print(ph.completeNumber);
                         phone=ph.completeNumber;

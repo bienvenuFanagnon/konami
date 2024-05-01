@@ -54,8 +54,8 @@ class _PariEnCoursState extends State<PariEnCours> {
                       size: 20,
                     ),
                   ),
-                 // SizedBox(width: width*0.3,),
-                  Text("${formaterDateMatch(DateTime.fromMillisecondsSinceEpoch(pari.createdAt!))}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
+                  // SizedBox(width: width*0.3,),
+                 // Text("${formaterDateMatch(DateTime.fromMillisecondsSinceEpoch(pari.createdAt!))}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,fontSize: 12),),
 
 
 
@@ -75,19 +75,20 @@ class _PariEnCoursState extends State<PariEnCours> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           for(Equipe eq in pari.teams!)
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Container(
+                            Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Container(
 
-                                child: Image.network("${eq.logo!}",fit: BoxFit.cover,),
-                                width: 30,
-                                height: 30,
+                                  child: Image.network("${eq.logo!}",fit: BoxFit.cover,),
+                                  width: 30,
+                                  height: 30,
+                                ),
                               ),
                             ),
-                          ),
                         ],
                       ),
+                      /*
                       Row(
                         children: [
                           Icon(Icons.person),
@@ -95,6 +96,8 @@ class _PariEnCoursState extends State<PariEnCours> {
                           Text("@${pari.user!.pseudo!}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w900,fontSize: 15),),
                         ],
                       )
+
+                       */
 
                     ],
                   ),
@@ -127,8 +130,8 @@ class _PariEnCoursState extends State<PariEnCours> {
                               );
                               ScaffoldMessenger.of(context).showSnackBar(snackBar);
                               print("non disponible : ${value.status}");
-                               //  value.status=PariStatus.DISPONIBLE.name;
-                           //    await equipeProvider.updatePari(value, context);
+                              //  value.status=PariStatus.DISPONIBLE.name;
+                              //    await equipeProvider.updatePari(value, context);
                               setStateb(() {
                                 onTap=false;
 
@@ -153,7 +156,7 @@ class _PariEnCoursState extends State<PariEnCours> {
                                 borderRadius: BorderRadius.all(Radius.circular(10))
                             ),
                             child: onTap? Container(
-                              height: 20,
+                                height: 20,
                                 width: 20,
 
                                 child: CircularProgressIndicator()):Text("Jouer",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w900,fontSize: 15),)));
@@ -187,7 +190,7 @@ class _PariEnCoursState extends State<PariEnCours> {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text('Pari En Cours'),
+          title: Text('Autres paris disponible'),
         ),
         body: Center(
           child: Padding(
@@ -200,7 +203,10 @@ class _PariEnCoursState extends State<PariEnCours> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text('Autres paris en cours'),
+
+                      Container(
+                          width: width*0.9,
+                          child: Text('Cette section présente les paris que les autres utilisateurs ont mis en place.',overflow: TextOverflow.fade,)),
                       /*
                       GestureDetector(
                         onTap: () {

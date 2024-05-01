@@ -32,7 +32,7 @@ class _RetraitPageState extends State<DepotPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Depot'),
+          title: Text('Depot Manuel'),
         ),
         body: Center(
           child: Container(

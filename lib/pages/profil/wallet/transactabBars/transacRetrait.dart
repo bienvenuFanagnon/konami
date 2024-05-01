@@ -2,6 +2,7 @@
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:konami_bet/models/soccers_models.dart';
@@ -82,7 +83,32 @@ class _AllPariState extends State<TransactionRetrait> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("${trans.montant} XOF",style: TextStyle(color: Colors.green,fontWeight: FontWeight.w600,fontSize: 20),),
+                  Text("${trans.montant} XOF",style: TextStyle(
+                      color: trans.status==TransactionStatus.VALIDER.name?Colors.green:trans.status==TransactionStatus.ENCOURS.name?Colors.grey: Colors.red,// Remplacez Colors.red par la couleur de votre choix
+                      fontWeight: FontWeight.w600,fontSize: 15),),
+
+                  Container(
+
+                      alignment: Alignment.center,
+                      height: 30,
+                      width: 120,
+                      decoration: BoxDecoration(
+color: Colors.black,                          borderRadius: BorderRadius.all(Radius.circular(10))
+                      ),
+                      child:  TextButton(
+
+
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: trans.id));
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('code copié dans le presse-papiers'),
+                          ));
+                        },
+                        child: Text("Copier le code",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 12),),
+                      )
+
+                  ),
+
 
                   Container(
                       alignment: Alignment.center,

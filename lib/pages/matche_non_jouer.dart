@@ -62,7 +62,7 @@ class _MyListMatchState extends State<MyListMatch> {
                   Icon(MaterialIcons.live_tv,color: matchPari.status==MatchStatus.ENCOURS.name?Colors.green:Colors.black,),
 
 
-                 // Icon(matchPari.status==MatchStatus.ENCOURS.name?Icons.lock_open_outlined:Icons.lock,color:matchPari.status==PariStatus.DISPONIBLE.name?Colors.green: Colors.red,)
+                  // Icon(matchPari.status==MatchStatus.ENCOURS.name?Icons.lock_open_outlined:Icons.lock,color:matchPari.status==PariStatus.DISPONIBLE.name?Colors.green: Colors.red,)
 
                 ],
               ),
@@ -73,6 +73,7 @@ class _MyListMatchState extends State<MyListMatch> {
                 children: [
                   Column(
                     children: [
+                      /*
                       Row(
                         children: [
                           Icon(Icons.person),
@@ -80,6 +81,8 @@ class _MyListMatchState extends State<MyListMatch> {
                           Text("@${matchPari.user_a!.pseudo!}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w900,fontSize: 15),),
                         ],
                       ),
+
+                       */
                       SizedBox(height: 10,),
                       matchPari.user_a_id!=serviceProvider.loginUser.id_db?Text("Adverse".toUpperCase(),style: TextStyle(color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),):   Text("Vous".toUpperCase(),style: TextStyle(color: Colors.green,fontWeight: FontWeight.w600,fontSize: 15),),
 
@@ -111,6 +114,7 @@ class _MyListMatchState extends State<MyListMatch> {
                   ),
                   Column(
                     children: [
+                      /*
                       Row(
                         children: [
                           Icon(Icons.person),
@@ -118,6 +122,8 @@ class _MyListMatchState extends State<MyListMatch> {
                           Text("@${matchPari.user_b!.pseudo!}",style: TextStyle(color: Colors.black,fontWeight: FontWeight.w900,fontSize: 15),),
                         ],
                       ),
+
+                       */
                       SizedBox(height: 10,),
 
                       matchPari.user_b_id!=serviceProvider.loginUser.id_db?Text("Adverse".toUpperCase(),style: TextStyle(color: Colors.blue,fontWeight: FontWeight.w600,fontSize: 15),):   Text("Vous".toUpperCase(),style: TextStyle(color: Colors.green,fontWeight: FontWeight.w600,fontSize: 15),),
@@ -164,7 +170,7 @@ class _MyListMatchState extends State<MyListMatch> {
                         onTap=true;
 
                       });
-                    await  equipeProvider.getOnlyMatch(matchPari.id!).then((value) async {
+                      await  equipeProvider.getOnlyMatch(matchPari.id!).then((value) async {
                         if (value.status!=MatchStatus.FINISHED.name) {
                           await    serviceProvider.getAppData().then(((appData) {
                             if (appData.isNotEmpty) {
@@ -265,6 +271,7 @@ class _MyListMatchState extends State<MyListMatch> {
       ),
     );
   }
+
   @override
   void initState() {
     // TODO: implement initState

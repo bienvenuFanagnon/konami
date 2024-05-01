@@ -20,6 +20,9 @@ Map<String, dynamic> _$EquipeToJson(Equipe instance) => <String, dynamic>{
 AppData _$AppDataFromJson(Map<String, dynamic> json) => AppData()
   ..id = json['id'] as String
   ..emailConatct = json['emailConatct'] as String
+  ..phoneConatct = json['phoneConatct'] as String
+  ..app_link = json['app_link'] as String
+  ..app_version_code = json['app_version_code'] as int
   ..app_is_valide = json['app_is_valide'] as bool
   ..videos =
       (json['videos'] as List<dynamic>?)?.map((e) => e as String).toList()
@@ -30,6 +33,9 @@ AppData _$AppDataFromJson(Map<String, dynamic> json) => AppData()
 Map<String, dynamic> _$AppDataToJson(AppData instance) => <String, dynamic>{
       'id': instance.id,
       'emailConatct': instance.emailConatct,
+      'phoneConatct': instance.phoneConatct,
+      'app_link': instance.app_link,
+      'app_version_code': instance.app_version_code,
       'app_is_valide': instance.app_is_valide,
       'videos': instance.videos,
       'soldeTotal': instance.soldeTotal,
@@ -62,8 +68,11 @@ Map<String, dynamic> _$InformationToJson(Information instance) =>
 Utilisateur _$UtilisateurFromJson(Map<String, dynamic> json) => Utilisateur(
       id_db: json['id_db'] as String? ?? "",
       pseudo: json['pseudo'] as String? ?? "",
+      oneIgnalUserid: json['oneIgnalUserid'] as String? ?? "",
       nom: json['nom'] as String? ?? "",
       photo: json['photo'] as String? ?? "",
+      pay_phone: json['pay_phone'] as String? ?? "",
+      pay_prefix_phone: json['pay_prefix_phone'] as String? ?? "",
       carte_identite: json['carte_identite'] as String? ?? "",
       demande_partenaire: json['demande_partenaire'] as String? ?? "",
       numero_carte_identite: json['numero_carte_identite'] as String? ?? "",
@@ -96,6 +105,7 @@ Map<String, dynamic> _$UtilisateurToJson(Utilisateur instance) =>
       'pseudo': instance.pseudo,
       'nom': instance.nom,
       'photo': instance.photo,
+      'oneIgnalUserid': instance.oneIgnalUserid,
       'carte_identite': instance.carte_identite,
       'numero_carte_identite': instance.numero_carte_identite,
       'code_parrain': instance.code_parrain,
@@ -108,6 +118,8 @@ Map<String, dynamic> _$UtilisateurToJson(Utilisateur instance) =>
       'is_blocked': instance.is_blocked,
       'is_partenaire': instance.is_partenaire,
       'phoneNumber': instance.phoneNumber,
+      'pay_phone': instance.pay_phone,
+      'pay_prefix_phone': instance.pay_prefix_phone,
       'demande_partenaire': instance.demande_partenaire,
       'nombre_retrait': instance.nombre_retrait,
       'nombre_depot': instance.nombre_depot,

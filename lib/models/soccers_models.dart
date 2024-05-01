@@ -38,6 +38,9 @@ class Equipe {
 class AppData {
   late String id;
   late String emailConatct;
+  late String phoneConatct;
+  late String app_link="";
+  late int app_version_code;
   late bool app_is_valide=true;
 // "en attente", "validé", "rejeté"
 // "depot" ou "retrait"
@@ -86,6 +89,8 @@ class Utilisateur {
   late String? pseudo="";
   late String? nom="";
   late String? photo="";
+    late String? oneIgnalUserid="";
+
   late String? carte_identite="";
   late String? numero_carte_identite="";
   late String? code_parrain="";
@@ -116,6 +121,8 @@ class Utilisateur {
   Utilisateur({
     this.id_db = "",
     this.pseudo = "",
+        this.oneIgnalUserid = "",
+
     this.nom = "",
     this.photo = "",
     this.pay_phone = "",

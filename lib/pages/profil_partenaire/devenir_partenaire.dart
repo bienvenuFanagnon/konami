@@ -146,7 +146,7 @@ class _NewAppInfoState extends State<DevenirPartenaire> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            'Une fois que vous aurez les 20 pilules, vous allez faire une demande en remplissant ce formulaire.',
+                            'Une fois que vous aurez les 20 filleuls, vous allez faire une demande en remplissant ce formulaire.',
                             style: TextStyle(
                               color: Colors.black,
                             ),

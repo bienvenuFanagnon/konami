@@ -167,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   }
                 }) ,
-            label: 'Matches',
+            label: 'Matchs',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),

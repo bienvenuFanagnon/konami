@@ -228,6 +228,7 @@ class PariService {
 
 
   Future<List<Pari>> getAllPari() async {
+    
     late List<Pari> list= [];
 
 

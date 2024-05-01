@@ -8,10 +8,18 @@ import 'package:konami_bet/pages/profil/wallet/transactabBars/transacRetrait.dar
 
 
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../models/soccers_models.dart';
 import '../../../../providers/equipe_provider.dart';
 import '../../../../providers/providers.dart';
+
+class Agent {
+  final String name;
+  final String imageUrl;
+
+  Agent({required this.name, required this.imageUrl});
+}
 class RetraitPage extends StatefulWidget {
   const RetraitPage({super.key});
 
@@ -25,6 +33,22 @@ class _RetraitPageState extends State<RetraitPage> {
   Provider.of<ServiceProvider>(context, listen: false);
   late EquipeProvider equipeProvider =
   Provider.of<EquipeProvider>(context, listen: false);
+  final List<Agent> agents = [
+    Agent(name: 'Agent 1', imageUrl: 'https://picsum.photos/200'),
+
+  ];
+  Future<void> launchWhatsApp(String phone,) async {
+    //  var whatsappURl_android = "whatsapp://send?phone="+whatsapp+"&text=hello";
+    // String url = "https://wa.me/?tel:+228$phone&&text=YourTextHere";
+    String url = "whatsapp://send?phone="+phone+"&text=Salut ,\n*Pseudo du compte*: *@${serviceProvider.loginUser.pseudo!.toUpperCase()}*,\n\n je vous contacte via *${"Konami".toUpperCase()}* pour un retrait\n";
+    if (!await launchUrl(Uri.parse(url))) {
+      final snackBar = SnackBar(duration: Duration(seconds: 2),content: Text("Impossible d\'ouvrir WhatsApp",textAlign: TextAlign.center, style: TextStyle(color: Colors.red),));
+
+      // Afficher le SnackBar en bas de la page
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      throw Exception('Impossible d\'ouvrir WhatsApp');
+    }
+  }
 
   final _formKey = GlobalKey<FormState>();
   final _montantController = TextEditingController();
@@ -35,14 +59,63 @@ class _RetraitPageState extends State<RetraitPage> {
           title: Text('Retrait'),
         ),
         body: Center(
+
           child: Container(
 
             padding: EdgeInsets.all(20),
+
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                //mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  const Text(
+                    'Veuillez contacter un agent avant de commencer l\'opération.',
+                    style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16.0),
+                  const Text(
+                    'Pour un retrait manuel, saisissez le montant et validez pour créer la transaction. Après validation, vous recevrez un code de transaction. Copiez-le et envoyez-le à un agent pour vérification et pour recevoir votre paiement.',
+                    style: TextStyle(fontSize: 16.0),
+                  ),
+                  const SizedBox(height: 16.0),
+                  const Text(
+                    'Liste des agents disponibles:',
+                    style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 16.0),
+
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: agents.length,
+                      itemBuilder: (context, index) {
+                        final agent = agents[index];
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: AssetImage("assets/logoIcon.png"),
+                          ),
+                          title: Text(agent.name),
+                          trailing: ElevatedButton(
+                            onPressed: () {
+                              // Handle contact agent action
+                              print('Contacting agent ${agent.name}');
+                              serviceProvider.getAppData().then((value) {
+                                if (value.isNotEmpty) {
+                                  launchWhatsApp("${value.first.phoneConatct}");
+
+                                }
+                              },);
+                              //launchWhatsApp("+22896198801");
+
+                            },
+                            child: const Text('Contacter'),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(height: 16.0),
                   TextFormField(
                     keyboardType: TextInputType.number,
                     controller: _montantController,
@@ -50,8 +123,8 @@ class _RetraitPageState extends State<RetraitPage> {
                       if (value!.isEmpty) {
                         return 'Veuillez entrer un montant';
                       }
-                      if (double.parse(value)<1000) {
-                        return 'montant >=1000 xof';
+                      if (double.parse(value)<500) {
+                        return 'montant >=500 xof';
                       }
                       return null;
                     },
@@ -59,6 +132,7 @@ class _RetraitPageState extends State<RetraitPage> {
                       labelText: 'Montant',
                     ),
                   ),
+
                   SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -93,7 +167,7 @@ class _RetraitPageState extends State<RetraitPage> {
                               transaction.type_compte=TypeCompte.PARTICULIER.name;
 
                               transaction.montant=double.parse(_montantController.text);
-                              transaction.status=TransactionStatus.values[random.nextInt(3)].name;
+                              transaction.status=TransactionStatus.ANNULER.name;
                               transaction.createdAt=DateTime.now().millisecondsSinceEpoch;
                               transaction.updatedAt=DateTime.now().millisecondsSinceEpoch;
                               await  equipeProvider.createTransaction(transaction);

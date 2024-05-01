@@ -22,11 +22,11 @@ class TeamSelectedPage extends StatefulWidget {
 class _TeamSelectedPageState extends State<TeamSelectedPage> {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   late ServiceProvider serviceProvider =
-  Provider.of<ServiceProvider>(context, listen: false);
+      Provider.of<ServiceProvider>(context, listen: false);
   late String pari = "";
-  late int size =0;
-  bool onTap=false;
-  List<Equipe> teams=[];
+  late int size = 0;
+  bool onTap = false;
+  List<Equipe> teams = [];
   TextEditingController montantController = TextEditingController();
 
   String formatDateMatch = "dd MMM yyyy";
@@ -40,24 +40,31 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
   }
 
   late EquipeProvider equipeProvider =
-  Provider.of<EquipeProvider>(context, listen: false);
+      Provider.of<EquipeProvider>(context, listen: false);
 
   void saveTeams(List<Equipe> teams) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> teamList = teams.map((team) => json.encode(team.toJson())).toList();
-    size=teamList.length;
+    List<String> teamList =
+        teams.map((team) => json.encode(team.toJson())).toList();
+    size = teamList.length;
     prefs.setStringList('teams', teamList);
   }
+
   Future<List<Equipe>> getTeams() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> teamList = prefs.getStringList('teams') ?? [];
-    return teamList.map((teamJson) => Equipe.fromJson(json.decode(teamJson))).toList();
+    return teamList
+        .map((teamJson) => Equipe.fromJson(json.decode(teamJson)))
+        .toList();
   }
 
   Future<int> getTeamsSize() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> teamList = prefs.getStringList('teams') ?? [];
-    size =teamList.map((teamJson) => Equipe.fromJson(json.decode(teamJson))).toList().length;
+    size = teamList
+        .map((teamJson) => Equipe.fromJson(json.decode(teamJson)))
+        .toList()
+        .length;
     return size;
   }
 
@@ -85,15 +92,26 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeWallet(),));
-
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomeWallet(),
+                        ));
                   },
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.account_balance_wallet,color: Colors.black,),
-                      SizedBox(width: 5,),
-                      const Text('Recharger',style: TextStyle(color: Colors.white),),
+                      Icon(
+                        Icons.account_balance_wallet,
+                        color: Colors.black,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      const Text(
+                        'Recharger',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ],
                   ),
                   style: ElevatedButton.styleFrom(
@@ -110,9 +128,10 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
       },
     );
   }
+
   final _formKey = GlobalKey<FormState>();
 
-  late Pari x_pari=Pari();
+  late Pari x_pari = Pari();
 
   @override
   void initState() {
@@ -125,21 +144,20 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-  //  getTeamsSize().then((value) => value);
+    //  getTeamsSize().then((value) => value);
     return Scaffold(
-      
       appBar: AppBar(
-        leading: IconButton(onPressed: () {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FootballPage(),
-              ));
-          
-        }, icon: Icon(Icons.arrow_back_outlined)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FootballPage(),
+                  ));
+            },
+            icon: Icon(Icons.arrow_back_outlined)),
         automaticallyImplyLeading: false,
         title: Text('Créer un nouveau pari'),
-
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -147,7 +165,9 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: height*0.05  ,),
+              SizedBox(
+                height: height * 0.05,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,23 +176,26 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                   Padding(
                     padding: const EdgeInsets.only(right: 20.0),
                     child: badges.Badge(
-                      badgeContent: Text('${equipeProvider.teams_selected.length}',style: TextStyle(color: Colors.white),),
+                      badgeContent: Text(
+                        '${equipeProvider.teams_selected.length}',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       child: Icon(MaterialCommunityIcons.soccer_field),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               SingleChildScrollView(
                 child: SizedBox(
-                  height: height*0.5,
+                  height: height * 0.5,
                   width: width,
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
-
                     itemCount: equipeProvider.teams_selected.length,
-                    itemBuilder: (BuildContext context,
-                        int index) {
+                    itemBuilder: (BuildContext context, int index) {
                       Equipe team = equipeProvider.teams_selected[index];
                       return Container(
                         //width: 100,
@@ -184,8 +207,7 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                               //width: 200,
                               child: ListTile(
                                   title: Padding(
-                                    padding:
-                                    const EdgeInsets.only(left: 5.0),
+                                    padding: const EdgeInsets.only(left: 5.0),
                                     child: Icon(
                                       Icons.sports_soccer,
                                       color: Colors.green,
@@ -206,37 +228,34 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
                                       ),
                                     ),
                                   ),
-                                  trailing:TextButton(
-                                      onPressed: ()  {
-
+                                  trailing: TextButton(
+                                      onPressed: () {
                                         setState(() {
                                           // teams.add(team);
-                                          equipeProvider.teams_selected.remove(team);
+                                          equipeProvider.teams_selected
+                                              .remove(team);
 
                                           //saveTeams(teams);
                                         });
-                                        print(
-                                            "team size : ${teams.length}");
+                                        print("team size : ${teams.length}");
                                       },
                                       child: Text(
                                         "Retirer",
-                                        style: TextStyle(
-                                            color: Colors.red),
-                                      ))
-                              ),
+                                        style: TextStyle(color: Colors.red),
+                                      ))),
                             ),
                           ),
                         ),
                       );
-                    },),
+                    },
+                  ),
                 ),
               ),
-
             ],
           ),
         ),
       ),
-      bottomSheet:         Container(
+      bottomSheet: Container(
         width: width,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -245,147 +264,184 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-            Container(
-              width: width*0.8,
-              child: TextFormField(
-                controller: montantController,
-                keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-              labelText: 'Montant',
-              ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Le montant est obligatoire';
-                }
-                if (double.tryParse(value) == null) {
-                  return 'Le montant doit être un nombre';
-                }
-                if (int.parse(value)<1000) {
-                  return 'Le montant doit être > 1000 fcfa ';
-                }
-                return null;
-              },
-                        ),
-            ),
-                SizedBox(height: 20,),
-                TextButton(onPressed:onTap?() {
+                Container(
+                  width: width * 0.8,
+                  child: TextFormField(
+                    controller: montantController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Montant',
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Le montant est obligatoire';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Le montant doit être un nombre';
+                      }
+                      if (int.parse(value) < 500) {
+                        return 'Le montant doit être >= 500 fcfa ';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextButton(
+                  onPressed: onTap
+                      ? () {}
+                      : () async {
+                          if (_formKey.currentState!.validate()) {
+                            if (equipeProvider.teams_selected.length == 3) {
+                              setState(() {
+                                onTap = true;
+                              });
 
-                } :() async {
-                  if (_formKey.currentState!.validate()) {
-                    if (equipeProvider.teams_selected.length==3) {
-                      setState(() {
-                        onTap=true;
-                      });
+                              try {
+                                await serviceProvider
+                                    .getUserByIdContente(
+                                        serviceProvider.loginUser.id_db!,
+                                        context)
+                                    .then(
+                                  (value) async {
+                                    if (value) {
+                                      if (serviceProvider.loginUser.montant >
+                                              0 &&
+                                          serviceProvider.loginUser.montant >=
+                                              double.parse(
+                                                  montantController.text)) {
+                                        String id = FirebaseFirestore.instance
+                                            .collection('PariEnCours')
+                                            .doc()
+                                            .id;
+                                        Pari pari = Pari();
+                                        pari.id = id;
+                                        pari.score = 0;
+                                        pari.resultStatus =
+                                            PariResultStatus.NAN.name;
+                                        pari.teams = [];
+                                        pari.teams_id = [];
+                                        pari.montant = double.parse(
+                                            montantController.text);
+                                        pari.user_id =
+                                            serviceProvider.loginUser.id_db!;
+                                        pari.status =
+                                            PariStatus.DISPONIBLE.name;
+                                        for (Equipe eq
+                                            in equipeProvider.teams_selected) {
+                                          pari.teams_id!.add(eq.id!);
+                                        }
+                                        equipeProvider.teams_selected = [];
 
-                      try{
-                        await serviceProvider.getUserByIdContente(serviceProvider.loginUser.id_db!, context).then((value) async {
-                          if (value) {
-                            if (serviceProvider.loginUser.montant>0&&serviceProvider.loginUser.montant>=double.parse(montantController.text)) {
-                              String id = FirebaseFirestore.instance
-                                  .collection('PariEnCours')
-                                  .doc()
-                                  .id;
-                              Pari pari=Pari();
-                              pari.id=id;
-                              pari.score=0;
-                              pari.resultStatus=PariResultStatus.NAN.name;
-                              pari.teams=[];
-                              pari.teams_id=[];
-                              pari.montant=double.parse(montantController.text);
-                              pari.user_id=serviceProvider.loginUser.id_db!;
-                              pari.status=PariStatus.DISPONIBLE.name;
-                              for(Equipe eq in equipeProvider.teams_selected){
-                                pari.teams_id!.add(eq.id!);
+                                        pari.createdAt = DateTime.now()
+                                            .millisecondsSinceEpoch; // Get current time in milliseconds
+                                        pari.updatedAt = DateTime.now()
+                                            .millisecondsSinceEpoch;
+                                        await FirebaseFirestore.instance
+                                            .collection('PariEnCours')
+                                            .doc(id)
+                                            .set(pari.toJson());
+                                        serviceProvider.loginUser.montant =
+                                            serviceProvider.loginUser.montant -
+                                                double.parse(
+                                                    montantController.text);
+                                        await serviceProvider.updateUser(
+                                            serviceProvider.loginUser, context);
+                                        String montant = montantController.text;
+
+                                        montantController.text = "";
+                                        SnackBar snackBar = SnackBar(
+                                          content: Text(
+                                            "Le pari a été créé avec succès, veuillez le voir votre liste des paris en cours.",
+                                            textAlign: TextAlign.center,
+                                            style:
+                                                TextStyle(color: Colors.green),
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                        double mnt = int.parse(montant) * 1.8;
+
+                                        await serviceProvider
+                                            .getAllUsersOneSignaUserId()
+                                            .then(
+                                          (userIds) async {
+                                            if (userIds.isNotEmpty) {
+                                              await serviceProvider
+                                                  .sendNotification(userIds,
+                                                      "📢 Nouveau pari: ${mnt} fcfa à gagner! ✨");
+                                            }
+                                          },
+                                        );
+                                      } else {
+                                        _showBottomSheet(width);
+                                      } //sold in
+                                    } else {}
+                                  },
+                                );
+                              } catch (e) {
+                                print("erreur update post : ${e}");
+                                setState(() {
+                                  onTap = false;
+                                });
+                                SnackBar snackBar = SnackBar(
+                                  content: Text(
+                                    "erreur",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
                               }
-                              equipeProvider.teams_selected=[];
 
-                              pari.createdAt= DateTime.now().millisecondsSinceEpoch;// Get current time in milliseconds
-                              pari.updatedAt= DateTime.now().millisecondsSinceEpoch;
-                              await FirebaseFirestore.instance.collection('PariEnCours').doc(id).set(pari.toJson());
-                              serviceProvider.loginUser.montant=serviceProvider.loginUser.montant-double.parse(montantController.text);
-                              await  serviceProvider.updateUser(serviceProvider.loginUser, context);
-
-                              montantController.text="";
+                              setState(() {
+                                onTap = false;
+                              });
+                            } else {
                               SnackBar snackBar = SnackBar(
                                 content: Text(
-                                  "Le pari a été créé avec succès, veuillez le voir votre liste des paris en cours.",
+                                  "Le nombre d'équipes requis 3",
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.green),
+                                  style: TextStyle(color: Colors.red),
                                 ),
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
                             }
-                            else{
-                              _showBottomSheet(width);
 
-                            }//sold in
-
-                          }  else{
-
+                            // Traiter le montant saisi
                           }
-                        },);
-
-
-
-                      }catch(e){
-                        print("erreur update post : ${e}");
-                        setState(() {
-                          onTap=false;
-                        });
-                        SnackBar snackBar = SnackBar(
-                          content: Text(
-                            "erreur",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        );
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(snackBar);
-                      }
-
-                      setState(() {
-                        onTap=false;
-                      });
-                    }  else{
-                      SnackBar snackBar = SnackBar(
-                        content: Text(
-                          "Le nombre d'équipes requis 3",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      );
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(snackBar);
-                    }
-
-
-
-                    // Traiter le montant saisi
-                  }
-
-                }, child: Container(
-                    alignment: Alignment.center,
-                    height: 50,
-                    width: width*0.6,
-                    decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.all(Radius.circular(10))
-                    ),
-
-                    child:onTap? Container(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(),
-                    ): Text('Créer un nouveau pari',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600,color: Colors.white),)),),
+                        },
+                  child: Container(
+                      alignment: Alignment.center,
+                      height: 50,
+                      width: width * 0.6,
+                      decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: onTap
+                          ? Container(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(),
+                            )
+                          : Text(
+                              'Créer un nouveau pari',
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                            )),
+                ),
               ],
             ),
           ),
         ),
-      )
-      ,
-
+      ),
     );
   }
 }

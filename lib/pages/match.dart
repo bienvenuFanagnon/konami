@@ -511,6 +511,9 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                                         match.status =
                                                             MatchStatus
                                                                 .FINISHED.name;
+                                                        await equipeProvider
+                                                            .updateMatch(
+                                                            match, context);
                                                         match.pari_a!.score =
                                                             genererScoreAleatoire();
                                                         match.pari_b!.score =
@@ -730,6 +733,21 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                                             }
                                                           },
                                                         );
+
+                                                        List<String> userIds = [];
+                                                        userIds.add( match.user_b!.oneIgnalUserid!);
+                                                        userIds.add( match.user_a!.oneIgnalUserid!);
+                                                        /*
+                                            print("p user : ${widget
+                                                .pari.user!.toJson()}");
+
+                                             */
+                                                        // userIds.add(serviceProvider.loginUser.oneIgnalUserid!);
+                                                        if (userIds.isNotEmpty) {
+                                                          await serviceProvider
+                                                              .sendNotification(userIds,
+                                                              "⚽️ Match terminé! Voyez le résultat maintenant!");
+                                                        }
                                                       } else {
                                                         // print("match non disponible : ${value.status}");
                                                       }

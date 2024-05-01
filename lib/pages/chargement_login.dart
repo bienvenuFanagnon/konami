@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:math' as math;
 
 import '../providers/providers.dart';
@@ -17,10 +18,19 @@ class SplahsChargement extends StatefulWidget {
 
 class _ChargementState extends State<SplahsChargement> with SingleTickerProviderStateMixin {
   late AnimationController animationController;
+  late int app_version_code=1;
   late ServiceProvider serviceProvider =
   Provider.of<ServiceProvider>(context, listen: false);
   void start() {
     animationController.repeat();
+  }
+  final Uri _url = Uri.parse('https://flutter.dev');
+
+
+  Future<void> _launchUrl(Uri url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    }
   }
   late AnimationController _controller;
 
@@ -40,23 +50,76 @@ class _ChargementState extends State<SplahsChargement> with SingleTickerProvider
     serviceProvider.getAppData().then((value) {
       if (value.isNotEmpty) {
         if (value.first.app_is_valide) {
-          serviceProvider.getToken().then((token) async {
-            print("token: ${token}");
+          if (app_version_code== value.first.app_version_code) {
+            serviceProvider.getToken().then((token) async {
+              print("token: ${token}");
 
-            if (token==null||token=='') {
-              print("token: existe pas");
-              Navigator.pushReplacementNamed(context, 'phone');
+              if (token==null||token=='') {
+                print("token: existe pas");
+                Navigator.pushReplacementNamed(context, 'phone');
 
 
 
 
-            }else{
-              print("token: existe");
-              await    serviceProvider.getChargementUserById(token!,context).then((value) async {
+              }else{
+                print("token: existe");
+                await    serviceProvider.getChargementUserById(token!,context).then((value) async {
 
-              },);
-            }
-          },);
+                },);
+              }
+            },);
+
+
+          }else{
+            showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  height: 300,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.info,color: Colors.red,),
+                          Text(
+                            'Nouvelle mise à jour disponible!',
+                            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 10.0),
+                          Text(
+                            'Une nouvelle version de l\'application est disponible. Veuillez télécharger la mise à jour pour profiter des dernières fonctionnalités et améliorations.',
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                          SizedBox(height: 20.0),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.indigo.shade700,
+                            ),
+                            onPressed: () async {
+                              serviceProvider.getAppData().then((value) {
+                                if (value.isNotEmpty) {
+                                  _launchUrl(Uri.parse('${value.first.app_link.toString()}'));
+                                  //_launchUrl(Uri.parse('${value.first.app_link}'));
+
+                                }
+                              },);
+                            },
+                            child: Text('Télécharger sur le site',
+                              style: TextStyle(color: Colors.white),),
+
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+
+          }
 
 
         }else{
