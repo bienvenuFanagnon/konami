@@ -167,22 +167,25 @@ class _RetraitPageState extends State<RetraitPage> {
                               transaction.type_compte=TypeCompte.PARTICULIER.name;
 
                               transaction.montant=double.parse(_montantController.text);
-                              transaction.status=TransactionStatus.ANNULER.name;
+                              transaction.status=TransactionStatus.ENCOURS.name;
                               transaction.createdAt=DateTime.now().millisecondsSinceEpoch;
                               transaction.updatedAt=DateTime.now().millisecondsSinceEpoch;
-                              await  equipeProvider.createTransaction(transaction);
-                              if (transaction.status==TransactionStatus.VALIDER.name) {
+
+
                                 user.montant=user.montant-double.parse(_montantController.text);
                                 user.nombre_retrait=user.nombre_retrait!+1;
+                                serviceProvider.loginUser=user;
                                 //  print("apres : ${user.montant}");
                                 await  serviceProvider.updateUser(user, context);
+                                await  equipeProvider.createTransaction(transaction);
+
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('Votre compte a été  débité  avec succès !'),
                                     backgroundColor: Colors.green,
                                   ),
                                 );
-                              }
+
 
                             }  else{
                               ScaffoldMessenger.of(context).showSnackBar(

@@ -87,8 +87,8 @@ class _AllPariState extends State<TransactionRetrait> {
                       color: trans.status==TransactionStatus.VALIDER.name?Colors.green:trans.status==TransactionStatus.ENCOURS.name?Colors.grey: Colors.red,// Remplacez Colors.red par la couleur de votre choix
                       fontWeight: FontWeight.w600,fontSize: 15),),
 
-                  Container(
 
+                  trans.status==TransactionStatus.ENCOURS.name? Container(
                       alignment: Alignment.center,
                       height: 30,
                       width: 120,
@@ -107,7 +107,7 @@ color: Colors.black,                          borderRadius: BorderRadius.all(Rad
                         child: Text("Copier le code",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600,fontSize: 12),),
                       )
 
-                  ),
+                  ):Container(),
 
 
                   Container(

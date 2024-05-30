@@ -918,7 +918,7 @@ class EquipeProvider extends ChangeNotifier {
     CollectionReference collectionRef =
     FirebaseFirestore.instance.collection('Informations');
     // Get docs from collection reference
-    QuerySnapshot querySnapshot = await collectionRef.get()
+    QuerySnapshot querySnapshot = await collectionRef.orderBy('createdAt', descending: false).get()
         .then((value){
 
       print(value);

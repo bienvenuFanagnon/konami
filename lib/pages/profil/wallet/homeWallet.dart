@@ -310,7 +310,7 @@ class _HomeWalletState extends State<HomeWallet> {
                               print("nbr retrait ${serviceProvider.loginUser.nombre_retrait}");
 
                               if (serviceProvider.loginUser.retrait_is_valide!) {
-                                if (serviceProvider.loginUser.nombre_retrait!>-1) {
+                                if (serviceProvider.loginUser.nombre_retrait!>2) {
                                   if (serviceProvider.loginUser.is_valide!) {
 
                                     showDialog(

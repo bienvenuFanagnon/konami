@@ -168,6 +168,7 @@ class _NewAppInfoState extends State<ValidateCompte> {
                 SizedBox(
                   height: 25.0,
                 ),
+                /*
                 TextFormField(
                   keyboardType: TextInputType.number,
                   controller: _numeroController,
@@ -182,6 +183,8 @@ class _NewAppInfoState extends State<ValidateCompte> {
                     return null;
                   },
                 ),
+
+                 */
                 SizedBox(
                   height: 25.0,
                 ),
@@ -211,7 +214,7 @@ class _NewAppInfoState extends State<ValidateCompte> {
                                 child: Icon(Icons.add_circle_outlined),
                               ),
                               SizedBox(width: 5,),
-                              Text("Carte nationale d'identité(recto/verso)",style: TextStyle(color: Colors.white),),
+                              Text("photo de profile",style: TextStyle(color: Colors.white),),
                             ],
                           ),
                         ),
