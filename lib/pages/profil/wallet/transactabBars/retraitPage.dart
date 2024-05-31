@@ -16,10 +16,12 @@ import '../../../../providers/providers.dart';
 
 class Agent {
   final String name;
+  final String phone;
   final String imageUrl;
 
-  Agent({required this.name, required this.imageUrl});
+  Agent({required this.name, required this.imageUrl, required this.phone});
 }
+
 class RetraitPage extends StatefulWidget {
   const RetraitPage({super.key});
 
@@ -33,8 +35,7 @@ class _RetraitPageState extends State<RetraitPage> {
   Provider.of<ServiceProvider>(context, listen: false);
   late EquipeProvider equipeProvider =
   Provider.of<EquipeProvider>(context, listen: false);
-  final List<Agent> agents = [
-    Agent(name: 'Agent 1', imageUrl: 'https://picsum.photos/200'),
+   List<Agent> agents = [
 
   ];
   Future<void> launchWhatsApp(String phone,) async {
@@ -85,35 +86,53 @@ class _RetraitPageState extends State<RetraitPage> {
                   ),
                   const SizedBox(height: 16.0),
 
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: agents.length,
-                      itemBuilder: (context, index) {
-                        final agent = agents[index];
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: AssetImage("assets/logoIcon.png"),
-                          ),
-                          title: Text(agent.name),
-                          trailing: ElevatedButton(
-                            onPressed: () {
-                              // Handle contact agent action
-                              print('Contacting agent ${agent.name}');
-                              serviceProvider.getAppData().then((value) {
-                                if (value.isNotEmpty) {
-                                  launchWhatsApp("${value.first.phoneConatct}");
+                  FutureBuilder(
+                      future: serviceProvider.getAppData(),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List<AppData> appdatas=snapshot.data;
+                          agents = [
+                          ];
+                          if(appdatas.isNotEmpty){
+                            for(int i=0;i<appdatas.first.phonesConatct.length;i++){
+                              Agent ag=  Agent(phone: '${appdatas.first.phonesConatct[i]}',name: 'Agent ${i+1}', imageUrl: 'https://picsum.photos/200');
+                              agents.add(ag);
 
-                                }
-                              },);
-                              //launchWhatsApp("+22896198801");
+                            }
+                          }
 
-                            },
-                            child: const Text('Contacter'),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+
+                          return           Expanded(
+                            child: ListView.builder(
+                              itemCount: agents.length,
+                              itemBuilder: (context, index) {
+                                final agent = agents[index];
+                                return ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage: AssetImage("assets/logoIcon.png"),
+                                  ),
+                                  title: Text(agent.name),
+                                  trailing: ElevatedButton(
+                                    onPressed: () {
+
+                                      launchWhatsApp("${agent.phone}");
+
+
+
+                                    },
+                                    child: const Text('Contacter'),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                          ;
+                        } else if (snapshot.hasError) {
+                          return Icon(Icons.error_outline);
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      }),
 
                   const SizedBox(height: 16.0),
                   TextFormField(
@@ -123,8 +142,8 @@ class _RetraitPageState extends State<RetraitPage> {
                       if (value!.isEmpty) {
                         return 'Veuillez entrer un montant';
                       }
-                      if (double.parse(value)<500) {
-                        return 'montant >=500 xof';
+                      if (double.parse(value)<1200) {
+                        return 'montant >=1200 xof';
                       }
                       return null;
                     },

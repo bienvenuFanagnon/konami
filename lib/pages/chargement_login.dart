@@ -18,7 +18,7 @@ class SplahsChargement extends StatefulWidget {
 
 class _ChargementState extends State<SplahsChargement> with SingleTickerProviderStateMixin {
   late AnimationController animationController;
-  late int app_version_code=3;
+  late int app_version_code=5;
   late ServiceProvider serviceProvider =
   Provider.of<ServiceProvider>(context, listen: false);
   void start() {

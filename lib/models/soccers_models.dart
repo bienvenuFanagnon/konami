@@ -39,6 +39,8 @@ class AppData {
   late String id;
   late String emailConatct;
   late String phoneConatct;
+  late List<String> phonesConatct;
+
   late String app_link="";
   late int app_version_code;
   late bool app_is_valide=true;
@@ -96,12 +98,14 @@ class Utilisateur {
   late String? code_parrain="";
   late String? code_user_parrainage="";
   late String? prenom="";
+  late String? password_locked="";
   late String? codePinSecurity="";
   late bool? haveCodeSecurity=false;
   late bool? is_valide=false;
   late bool? retrait_is_valide=true;
   late bool? is_blocked=false;
   late bool? is_partenaire=false;
+  late bool? is_connected=false;
   late String? phoneNumber="";
   late String? pay_phone="";
   late String? pay_prefix_phone="";

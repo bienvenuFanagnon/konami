@@ -21,6 +21,8 @@ AppData _$AppDataFromJson(Map<String, dynamic> json) => AppData()
   ..id = json['id'] as String
   ..emailConatct = json['emailConatct'] as String
   ..phoneConatct = json['phoneConatct'] as String
+  ..phonesConatct =
+      (json['phonesConatct'] as List<dynamic>).map((e) => e as String).toList()
   ..app_link = json['app_link'] as String
   ..app_version_code = json['app_version_code'] as int
   ..app_is_valide = json['app_is_valide'] as bool
@@ -34,6 +36,7 @@ Map<String, dynamic> _$AppDataToJson(AppData instance) => <String, dynamic>{
       'id': instance.id,
       'emailConatct': instance.emailConatct,
       'phoneConatct': instance.phoneConatct,
+      'phonesConatct': instance.phonesConatct,
       'app_link': instance.app_link,
       'app_version_code': instance.app_version_code,
       'app_is_valide': instance.app_is_valide,
@@ -97,7 +100,9 @@ Utilisateur _$UtilisateurFromJson(Map<String, dynamic> json) => Utilisateur(
       montant: (json['montant'] as num?)?.toDouble() ?? 0,
       montant_compte_parrain:
           (json['montant_compte_parrain'] as num?)?.toDouble() ?? 0,
-    );
+    )
+      ..password_locked = json['password_locked'] as String?
+      ..is_connected = json['is_connected'] as bool?;
 
 Map<String, dynamic> _$UtilisateurToJson(Utilisateur instance) =>
     <String, dynamic>{
@@ -111,12 +116,14 @@ Map<String, dynamic> _$UtilisateurToJson(Utilisateur instance) =>
       'code_parrain': instance.code_parrain,
       'code_user_parrainage': instance.code_user_parrainage,
       'prenom': instance.prenom,
+      'password_locked': instance.password_locked,
       'codePinSecurity': instance.codePinSecurity,
       'haveCodeSecurity': instance.haveCodeSecurity,
       'is_valide': instance.is_valide,
       'retrait_is_valide': instance.retrait_is_valide,
       'is_blocked': instance.is_blocked,
       'is_partenaire': instance.is_partenaire,
+      'is_connected': instance.is_connected,
       'phoneNumber': instance.phoneNumber,
       'pay_phone': instance.pay_phone,
       'pay_prefix_phone': instance.pay_prefix_phone,

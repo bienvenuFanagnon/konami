@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:konami_bet/pages/auth/registration.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 
@@ -171,14 +175,100 @@ class _VerificationOtpState extends State<VerificationOtp> {
       print("Le code est erroné");
     }, autoRetrieval: (v) {});
   }
+  Future<void> onResendSmsCode2() async {
+    resend = false;
+    loading = false;
+    try{
+      decompte();
+      setState(() {});
+      final random = Random.secure();
+
+      int nombreAleatoire = random.nextInt(9000) + 1000;
+      serviceProvider.smsCode=0;
+      serviceProvider.smsCode=nombreAleatoire;
+
+      serviceProvider.getUserByPhone(widget.phoneNumber).then((users) async {
+        if(users.isNotEmpty){
+          await serviceProvider
+              .sendNotification([users.first.oneIgnalUserid!=null&&users.first.oneIgnalUserid!.isNotEmpty?users.first.oneIgnalUserid!:OneSignal.User.pushSubscription.id!],
+              "📢 Code:  ${nombreAleatoire}")
+              .then((value) {
+            if(value){
+
+            }else{
+              ScaffoldMessenger.of(context).showSnackBar(
+
+                SnackBar(
+                  backgroundColor: Colors.red,
+
+                  content: Text("Erreur d'envoi du code! Veuillez réessayer.",style: TextStyle(color: Colors.white),),
+                ),
+              );
+
+            }
+          },);
+
+
+
+        }else{
+          await serviceProvider
+              .sendNotification([OneSignal.User.pushSubscription.id!],
+              "📢 Code:  ${nombreAleatoire}")
+              .then((value) {
+                if(value){
+
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+
+                  SnackBar(
+                    backgroundColor: Colors.red,
+
+                    content: Text("Erreur d'envoi du code! Veuillez réessayer.",style: TextStyle(color: Colors.white),),
+                  ),
+                );
+
+                }
+              },);
+
+
+        }
+
+      },);
+
+
+
+      loading = false;
+      setState(() {});
+
+    }catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(
+
+        SnackBar(
+          backgroundColor: Colors.red,
+
+          content: Text("Erreur d'envoi du code! Veuillez réessayer.",style: TextStyle(color: Colors.white),),
+        ),
+      );
+
+    }
+
+
+  }
 
   void onVerifySmsCode() async {
-    loading = true;
-    setState(() {});
-    await validateOtp(smsCode, widget.verificationId,context);
-    loading = false;
+    try{
+      loading = true;
+      setState(() {});
+      await validateOtp(smsCode, widget.verificationId,context);
+      loading = false;
 
-    setState(() {});
+      setState(() {});
+    }catch(e){
+      loading = false;
+
+      setState(() {});
+    }
+
    // showSuccessDialog(_scaffoldKey!.currentContext!);
     //checkUserAndRedirect("${widget.phoneNumber!}"+"@gmail.com");
     // Navigator.of(context).pop();
@@ -195,6 +285,68 @@ class _VerificationOtpState extends State<VerificationOtp> {
      */
 
   }
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  void onVerifySmsCode2() async {
+    try{
+      loading = true;
+      setState(() {});
+      //  await validateOtp(smsCode, widget.verificationId,context);
+
+      if(serviceProvider.smsCode.toString()==smsCode){
+        serviceProvider.getUserByPhone(widget.phoneNumber!).then((value) async {
+          if(value.isNotEmpty){
+            await  serviceProvider.getUserById( value.first.id_db!,widget.phoneNumber!, context);
+
+          } else {
+            String id = firestore
+                .collection('Utilisateur')
+                .doc()
+                .id;
+            Navigator.pushReplacement(
+                context,
+                CupertinoDialogRoute(
+                    builder: (context) => RegistrationPage(
+                      user_id: id,
+                      phone: widget.phoneNumber!,
+                    ),
+                    context: context));
+
+            //Navigator.pushNamed(context, 'register');
+          }
+        },);
+
+      }else{
+        //   print("code1 : ${serviceProvider.smsCode}");
+        //  print("code2 : ${smsCode}");
+        ScaffoldMessenger.of(context).showSnackBar(
+
+          SnackBar(
+            backgroundColor: Colors.red,
+
+            content: Text('Le code est erroné! Veuillez réessayer.',style: TextStyle(color: Colors.white),),
+          ),
+        );
+      }
+
+    }catch(e){
+      loading = false;
+
+      setState(() {});
+      ScaffoldMessenger.of(context).showSnackBar(
+
+        SnackBar(
+          backgroundColor: Colors.red,
+
+          content: Text("Erreur de vérification! Veuillez réessayer.",style: TextStyle(color: Colors.white),),
+        ),
+      );
+    }
+
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -231,8 +383,18 @@ class _VerificationOtpState extends State<VerificationOtp> {
                 const SizedBox(
                   height: 10,
                 ),
+                /*
                 Text(
                   "Veuillez entrer le code que vous venez de recevoir sur votre numéro de téléphone ${widget.phoneNumber}",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black45,
+                  ),
+                ),
+
+                 */
+                Text(
+                  "Veuillez saisir le code reçu par notification",
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.black45,
@@ -242,7 +404,7 @@ class _VerificationOtpState extends State<VerificationOtp> {
                   height: 40,
                 ),
                 Pinput(
-                  length: 6,
+                  length: 4,
                   onChanged: (value) {
                     smsCode = value;
                     setState(() {});
@@ -267,7 +429,7 @@ class _VerificationOtpState extends State<VerificationOtp> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                             padding: const EdgeInsets.symmetric(vertical: 15)),
-                        onPressed: smsCode.length < 6 || loading
+                        onPressed: smsCode.length < 4 || loading
                             ? null
                             : onVerifySmsCode,
                         child: loading

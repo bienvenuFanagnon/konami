@@ -20,15 +20,25 @@ void authWithPhoneNumber(String phone,
   );
 }
 
-Future<void> validateOtp(String smsCode, String verificationId,BuildContext context) async {
-  late ServiceProvider serviceProvider =
-  Provider.of<ServiceProvider>(context, listen: false);
-  final _credential = PhoneAuthProvider.credential(
-      verificationId: verificationId, smsCode: smsCode);
-  UserCredential userAuth= await _auth.signInWithCredential(_credential);
-  await  serviceProvider.getUserById( userAuth.user!.uid!,userAuth.user!.phoneNumber!, context);
-  //serviceProvider.storeToken( userAuth.user!.uid!);
-  return;
+Future<bool> validateOtp(String smsCode, String verificationId,BuildContext context) async {
+
+  try{
+    late ServiceProvider serviceProvider =
+    Provider.of<ServiceProvider>(context, listen: false);
+    final _credential = PhoneAuthProvider.credential(
+        verificationId: verificationId, smsCode: smsCode);
+    UserCredential userAuth= await _auth.signInWithCredential(_credential);
+    await  serviceProvider.getUserById( userAuth.user!.uid!,userAuth.user!.phoneNumber!, context);
+    //serviceProvider.storeToken( userAuth.user!.uid!);
+
+    return true;
+
+  }catch(e){
+    return false;
+
+
+  }
+
 }
 
 Future<void> disconnect() async {

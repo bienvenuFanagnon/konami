@@ -19,6 +19,7 @@ class ServiceProvider extends ChangeNotifier {
       VerificationDuLancementService();
   late MiseAJourMatchesService miseAJourMatchesService =
       MiseAJourMatchesService();
+  late int smsCode=0;
   late MatchService matchService = MatchService();
   late PariService pariService = PariService();
   late Utilisateur loginUser = Utilisateur();
@@ -380,6 +381,32 @@ class ServiceProvider extends ChangeNotifier {
 //  notifyListeners();
   }
 
+  Future<List<Utilisateur>> getUserByPhone(String phone) async {
+    late List<Utilisateur> list= [];
+
+
+    CollectionReference collectionRef =
+    FirebaseFirestore.instance.collection('Utilisateur');
+    // Get docs from collection reference
+    QuerySnapshot querySnapshot = await collectionRef.where("phoneNumber",isEqualTo: phone!).get()
+        .then((value){
+      print("Utilisateur");
+      print(value);
+      return value;
+    }).catchError((onError){
+
+    });
+
+    // Get data from docs and convert map to List
+    list = querySnapshot.docs.map((doc) =>
+        Utilisateur.fromJson(doc.data() as Map<String, dynamic>)).toList();
+
+
+    return list;
+
+  }
+
+
   Future<bool> getUserByIdContente(String id, BuildContext context) async {
     List<Utilisateur> listu = [];
 
@@ -691,7 +718,7 @@ class ServiceProvider extends ChangeNotifier {
       'YjEwNmY0MGQtODFhYi00ODBkLWIzZjgtZTVlYTFkMjQxZDA0'; // Replace with your authorization key
 
   // CHANGE THIS parameter to true if you want to test GDPR privacy consent
-  Future<void> sendNotification(List<String> userIds, String message) async {
+  Future<bool> sendNotification(List<String> userIds, String message) async {
     print(
         'state current user data  ================================================');
 
@@ -731,9 +758,12 @@ class ServiceProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       print('Notification sent successfully!');
       print('sending notification: ${response.body}');
+      return true;
     } else {
       print('Error sending notification: ${response.statusCode}');
       print('Error sending notification: ${response.body}');
+      return false;
+
     }
   }
 
