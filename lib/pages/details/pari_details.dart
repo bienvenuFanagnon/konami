@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ticket/flutter_ticket.dart';
@@ -658,6 +660,18 @@ class _DetailsPariState extends State<DetailsPari> with WidgetsBindingObserver {
                                     if (serviceProvider.loginUser.montant > 0 &&
                                         serviceProvider.loginUser.montant >=
                                             monPari.montant!) {
+                                      SnackBar snackBar1 = SnackBar(
+                                        content: Text(
+                                          "En attente de vérification, veuillez patienter quelques secondes...",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.green),
+                                        ),
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar1);
+                                      final random = Random();
+                                      await Future.delayed(Duration(seconds: random.nextInt(8) + 5));
                                       await equipeProvider
                                           .getOnlyPari(widget.pari.id!)
                                           .then((value) async {

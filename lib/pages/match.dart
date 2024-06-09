@@ -500,6 +500,23 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                                 onEnd: () async {
                                                   _video_controller.pause();
                                                   //_video_controller.dispose();
+                                                  // Génèrez un nombre aléatoire entre 3 et 7
+                                                  SnackBar snackBar1 = SnackBar(
+                                                    content: Text(
+                                                      "Le match est terminé, vérification et calcul en cours...",
+                                                      textAlign: TextAlign.center,
+                                                      style: TextStyle(
+                                                          color: Colors.green),
+                                                    ),
+                                                  );
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(snackBar1);
+                                                  final random = Random();
+                                                  await Future.delayed(Duration(seconds: random.nextInt(8) + 5));
+
+                                                  // Exécutez le code après 5 secondes
+                                                  //print('5 secondes se sont écoulées !');
+
 
                                                   await equipeProvider
                                                       .getOnlyMatch(match.id!)
@@ -749,7 +766,8 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                                               "⚽️ Match terminé! Voyez le résultat maintenant!");
                                                         }
                                                       } else {
-                                                        // print("match non disponible : ${value.status}");
+
+                                                        print("match non disponible : ${value.status}");
                                                       }
                                                     },
                                                   );
@@ -855,16 +873,21 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                               MatchStatus.ATTENTE.name
                                           ? () {}
                                           : () async {
-                                              SnackBar snackBar = SnackBar(
-                                                content: Text(
-                                                  "Lancement en cours ... ",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: Colors.green),
-                                                ),
-                                              );
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(snackBar);
+                                        SnackBar snackBar1 = SnackBar(
+                                          content: Text(
+                                            "En attente de vérification, veuillez patienter quelques secondes...",
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.green),
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar1);
+                                        final random = Random();
+                                        await Future.delayed(Duration(seconds: random.nextInt(8) + 5));
+                                        match.status =
+                                            MatchStatus.ENCOURS.name;
+
                                               await equipeProvider
                                                   .getOnlyMatch(match.id!)
                                                   .then(
@@ -873,6 +896,16 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                                       MatchStatus
                                                           .ATTENTE.name) {
                                                     setState(() async {
+                                                      SnackBar snackBar = SnackBar(
+                                                        content: Text(
+                                                          "Lancement en cours ... ",
+                                                          textAlign: TextAlign.center,
+                                                          style: TextStyle(
+                                                              color: Colors.green),
+                                                        ),
+                                                      );
+                                                      ScaffoldMessenger.of(context)
+                                                          .showSnackBar(snackBar);
                                                       match.status = MatchStatus
                                                           .ENCOURS.name;
                                                       await equipeProvider
@@ -882,6 +915,7 @@ class _MatchState extends State<MatchLive> with SingleTickerProviderStateMixin {
                                                       _video_controller.play();
                                                     });
                                                   } else {
+
                                                     SnackBar snackBar =
                                                         SnackBar(
                                                       content: Text(

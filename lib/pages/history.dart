@@ -306,7 +306,7 @@ class _MyListMatchState extends State<MyHistoListMatch> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('Historique des macths'),
+                        Text('Historique des matchs'),
                         /*
                         GestureDetector(
                           onTap: () {
