@@ -396,6 +396,13 @@ backgroundColor: Colors.green.withOpacity(0.5),
                   SizedBox(
                     height: 10,
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text('Choisir un catégorie pour jouer'),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Center(
                     child: Row(
                       children: [

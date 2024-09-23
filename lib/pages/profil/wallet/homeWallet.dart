@@ -269,7 +269,7 @@ class _HomeWalletState extends State<HomeWallet> {
                         leading:     GestureDetector(
                           onTap: () {
                            // Navigator.push(context, MaterialPageRoute(builder: (context) => DepotPage(),));
-                            //Navigator.push(context, MaterialPageRoute(builder: (context) => CinetPay(),));
+                           // Navigator.push(context, MaterialPageRoute(builder: (context) => CinetPay(),));
                            // Navigator.push(context, MaterialPageRoute(builder: (context) => PayGate(),));
                             Navigator.push(context, MaterialPageRoute(builder: (context) => CheckPaymentPage(),));
                           /* serviceProvider.makePayment().then((value) {

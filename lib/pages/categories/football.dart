@@ -69,12 +69,78 @@ class _VictoirePageState extends State<FootballPage> {
   bool isIn(List<Equipe> team_id, String current_team_id) {
     return team_id.any((item) => item.id == current_team_id);
   }
+  void _showBottomSheetPari(BuildContext ctx,double width) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (BuildContext context) {
+        return Container(
+          width: width,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Text('Vos 3 équipes pour créer un pari sont prêtes !'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TeamSelectedPage(),
+                      ));
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: badges.Badge(
+                        badgeContent: Text(
+                          '${equipeProvider.teams_selected.length}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        child: Icon(MaterialCommunityIcons.soccer_field,
+                        color: Colors.blueGrey,),
+                      ),
+                    ),
+                    // Icon(
+                    //   MaterialCommunityIcons.soccer_field,
+                    //   color: Colors.amber,
+                    // ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    const Text(
+                      'Créer un pari',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 
   late Pari x_pari = Pari();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    equipeProvider.teams_selected=[];
+
     getTeamsSize();
   }
 
@@ -83,6 +149,7 @@ class _VictoirePageState extends State<FootballPage> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     getTeamsSize().then((value) => value);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Teams Football'),
@@ -98,6 +165,7 @@ class _VictoirePageState extends State<FootballPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text('Ajouter des équipes au pari'),
+                    Text('${equipeProvider.teams_selected.length}/3'),
                     GestureDetector(
                       onTap: () {
         
@@ -201,7 +269,11 @@ class _VictoirePageState extends State<FootballPage> {
                                                         .showSnackBar(snackBar);
                                                   }else{
                                                     equipeProvider.teams_selected.add(team);
+                                                    if(equipeProvider.teams_selected.length>=3){
+                                                      _showBottomSheetPari(context,width);
+                                                    }
                                                   }
+
         
                                                   //saveTeams(teams);
                                                 });

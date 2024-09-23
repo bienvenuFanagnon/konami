@@ -62,7 +62,7 @@ class _MyAppState extends State<CinetPay> {
                           const SizedBox(height: 50.0),
                           Text(
                             "Cart informations.",
-                            style: Theme.of(context).textTheme.headline4,
+                            style: Theme.of(context).textTheme.headlineMedium,
                           ),
                           const SizedBox(height: 50.0),
                           Container(

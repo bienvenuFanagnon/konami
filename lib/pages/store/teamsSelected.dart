@@ -129,6 +129,7 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
     );
   }
 
+
   final _formKey = GlobalKey<FormState>();
 
   late Pari x_pari = Pari();
@@ -137,6 +138,7 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    // equipeProvider.teams_selected=[];
     getTeamsSize();
   }
 
@@ -145,6 +147,7 @@ class _TeamSelectedPageState extends State<TeamSelectedPage> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     //  getTeamsSize().then((value) => value);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
