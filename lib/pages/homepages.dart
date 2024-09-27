@@ -398,7 +398,7 @@ backgroundColor: Colors.green.withOpacity(0.5),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
-                    child: Text('Choisir un catégorie pour jouer'),
+                    child: Text('Choisir une catégorie pour jouer'),
                   ),
                   SizedBox(
                     height: 10,

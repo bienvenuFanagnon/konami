@@ -709,62 +709,75 @@ class ServiceProvider extends ChangeNotifier {
     makePayment();
   }
 
-  String oneSignalUrl = 'https://api.onesignal.com/notifications';
-  String applogo =
-      "https://firebasestorage.googleapis.com/v0/b/konami-bet.appspot.com/o/appmedias%2Flogokonami%20(2)%20(1).png?alt=media&token=eab2ad9d-35c2-42ea-ac6c-4f4142e8124f";
-  String oneSignalAppId =
-      'eeab82ff-8f16-445d-b907-75188cf4f56d'; // Replace with your app ID
-  String oneSignalAuthorization =
-      'YjEwNmY0MGQtODFhYi00ODBkLWIzZjgtZTVlYTFkMjQxZDA0'; // Replace with your authorization key
+
 
   // CHANGE THIS parameter to true if you want to test GDPR privacy consent
   Future<bool> sendNotification(List<String> userIds, String message) async {
-    print(
-        'state current user data  ================================================');
+    String oneSignalUrl = '';
+    String applogo = '';
+    String oneSignalAppId = ''; // Replace with your app ID
+    String oneSignalAuthorization = ''; // Replace with your authorization key
+    getAppData().then((app_datas) async {
+      if (app_datas.isNotEmpty) {
+        print(
+            'app  data*** ');
+        print(app_datas.first.toJson());
+        oneSignalUrl = app_datas.first.one_signal_app_url;
+        applogo = app_datas.first.app_logo;
+        oneSignalAppId = app_datas.first.one_signal_app_id; // Replace with your app ID
+        oneSignalAuthorization = app_datas.first.one_signal_api_key; // Replace with your authorization key
+        print(
+            'one signal url*** ');
+        print(oneSignalUrl);
+        print(
+            'state current user data  ================================================');
 
-    print(OneSignal.User.pushSubscription.id);
+        print(OneSignal.User.pushSubscription.id);
 
-    final body = {
-      'contents': {'en': message},
-      'app_id': oneSignalAppId,
+        final body = {
+          'contents': {'en': message},
+          'app_id': oneSignalAppId,
 
-      "include_player_ids":
-     // "include_subscription_ids":
+          "include_player_ids":
+          // "include_subscription_ids":
           userIds, //tokenIdList Is the List of All the Token Id to to Whom notification must be sent.
 
-      // android_accent_color reprsent the color of the heading text in the notifiction
-      "android_accent_color": "FF9976D2",
+          // android_accent_color reprsent the color of the heading text in the notifiction
+          "android_accent_color": "FF9976D2",
 
-      "small_icon": applogo,
+          "small_icon": applogo,
 
-      "large_icon": applogo,
+          "large_icon": applogo,
 
-      "headings": {"en": "konami"},
-      //"included_segments": ["Active Users", "Inactive Users"],
-      "data": {"foo": "bar"},
-      'name': 'konami',
-      'custom_data': {'order_id': 123, 'Prix': '500 fcfa'},
-    };
+          "headings": {"en": "konami"},
+          //"included_segments": ["Active Users", "Inactive Users"],
+          "data": {"foo": "bar"},
+          'name': 'konami',
+          'custom_data': {'order_id': 123, 'Prix': '500 fcfa'},
+        };
 
-    final response = await http.post(
-      Uri.parse(oneSignalUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': "Basic $oneSignalAuthorization",
-      },
-      body: jsonEncode(body),
-    );
+        final response = await http.post(
+          Uri.parse(oneSignalUrl),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Basic $oneSignalAuthorization",
+          },
+          body: jsonEncode(body),
+        );
 
-    if (response.statusCode == 200) {
-      print('Notification sent successfully!');
-      print('sending notification: ${response.body}');
-      return true;
-    } else {
-      print('Error sending notification: ${response.statusCode}');
-      print('Error sending notification: ${response.body}');
-      return false;
+        if (response.statusCode == 200) {
+          print('Notification sent successfully!');
+          print('sending notification: ${response.body}');
+          return true;
+        } else {
+          print('Error sending notification: ${response.statusCode}');
+          print('Error sending notification: ${response.body}');
+          return false;
 
-    }
+        }
+      }
+    },);
+return true;
   }
 
   Future<UserNotif?> fetchUserNotif() async {

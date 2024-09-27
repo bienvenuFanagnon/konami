@@ -24,6 +24,10 @@ AppData _$AppDataFromJson(Map<String, dynamic> json) => AppData()
   ..phonesConatct =
       (json['phonesConatct'] as List<dynamic>).map((e) => e as String).toList()
   ..app_link = json['app_link'] as String
+  ..app_logo = json['app_logo'] as String
+  ..one_signal_api_key = json['one_signal_api_key'] as String
+  ..one_signal_app_id = json['one_signal_app_id'] as String
+  ..one_signal_app_url = json['one_signal_app_url'] as String
   ..app_version_code = json['app_version_code'] as int
   ..app_is_valide = json['app_is_valide'] as bool
   ..videos =
@@ -38,6 +42,10 @@ Map<String, dynamic> _$AppDataToJson(AppData instance) => <String, dynamic>{
       'phoneConatct': instance.phoneConatct,
       'phonesConatct': instance.phonesConatct,
       'app_link': instance.app_link,
+      'app_logo': instance.app_logo,
+      'one_signal_api_key': instance.one_signal_api_key,
+      'one_signal_app_id': instance.one_signal_app_id,
+      'one_signal_app_url': instance.one_signal_app_url,
       'app_version_code': instance.app_version_code,
       'app_is_valide': instance.app_is_valide,
       'videos': instance.videos,

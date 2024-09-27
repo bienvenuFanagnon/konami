@@ -42,6 +42,10 @@ class AppData {
   late List<String> phonesConatct;
 
   late String app_link="";
+  late String app_logo="";
+  late String one_signal_api_key="";
+  late String one_signal_app_id="";
+  late String one_signal_app_url="";
   late int app_version_code;
   late bool app_is_valide=true;
 // "en attente", "validé", "rejeté"
